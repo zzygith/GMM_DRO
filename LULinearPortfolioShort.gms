@@ -5,18 +5,18 @@ Sets
     i  /1*10/;
 
 * Define parameters
-*Scalar distanceThreshold /1.0/;
-Scalar distanceThreshold /10.0/;
+Scalar distanceThreshold /1.0/;
+*Scalar distanceThreshold /10.0/;
 
 Parameter
-    wUH(UH) /UH1 0.126, UH2 0.622, UH3 0.252/
-    wLH(LH) /LH1 0.126, LH2 0.622, LH3 0.252/;
+    wUH(UH) /UH1 0.640, UH2 0.228, UH3 0.132/
+    wLH(LH) /LH1 0.640, LH2 0.228, LH3 0.132/;
 
 Table miuUH(UH,i)
          1      2       3       4       5       6       7       8       9       10
-    UH1  4.41   8.75    12.98   17.54   20.77   25.52   29.71   34.27   38.40   42.94
-    UH2  0.88   1.43    2.28    3.11    3.85    4.42    5.37    5.90    6.97    7.25
-    UH3  2.60   5.16    7.69    9.86    12.91   15.14   17.49   20.37   22.33   24.99;
+    UH1  0.825  1.552   2.277   3.258   3.842   4.552   5.224   6.568   7.079   7.510
+    UH2  2.393  5.295   7.657   9.990   12.723  15.111  18.159  19.602  22.367  25.312
+    UH3  3.961  8.590   12.891  17.145  21.333  26.120  29.560  33.608  38.710  42.368;
 
 
 * Define parameter index(i)
@@ -25,9 +25,9 @@ index(i) = ord(i);
 
 Table alphaUH(UH,i)
          1      2       3       4       5       6       7       8       9       10
-    UH1  1.94   3.31    6.67    6.59    8.26    9.97    11.40   12.94   13.73   20.22
-    UH2  1.92   3.63    5.27    7.26    8.79    12.12   11.66   14.56   15.50   15.69
-    UH3  1.93   3.88    6.43    7.70    7.65    10.84   13.48   14.14   20.26   21.38;
+    UH1  2.156  3.982   4.914   6.164   8.255   10.641  14.133  15.523  15.297  17.125
+    UH2  1.753  3.942   4.595   9.035   8.634   12.190  13.260  9.115   17.182  19.175
+    UH3  1.808  3.005   5.050   6.750   12.340  8.509   15.767  15.824  17.168  17.739;
 
 
 * Define variables
@@ -49,9 +49,9 @@ pi.up(UH,LH)      = 1;
 
 * Initial values for variables
 Parameter pi_init(UH,LH) /
-    UH1.LH1 0.126,  UH1.LH2 0.0,  UH1.LH3 0.0,
-    UH2.LH1 0.0,  UH2.LH2 0.622, UH2.LH3 0.0,
-    UH3.LH1 0.0,  UH3.LH2 0.0,  UH3.LH3 0.252 /;
+    UH1.LH1 0.640,  UH1.LH2 0.0,  UH1.LH3 0.0,
+    UH2.LH1 0.0,  UH2.LH2 0.228, UH2.LH3 0.0,
+    UH3.LH1 0.0,  UH3.LH2 0.0,  UH3.LH3 0.132 /;
 
 pi.L(UH,LH) = pi_init(UH,LH);
 
@@ -119,14 +119,14 @@ obj1..
 *        sum(i, sqr(miuUH('UH3',i) - miuLH('LH1',i)))
 *      + sum(i, alphaUH('UH3',i) + alphaLH('LH1',i))
 *      - 2 * sum(i, sqrt(alphaUH('UH3',i) * alphaLH('LH1',i)));
-   z =e=
-       sum(i, sqr(miuUH('UH3',i) - miuLH('LH2',i)))
-     + sum(i, alphaUH('UH3',i) + alphaLH('LH2',i))
-     - 2 * sum(i, sqrt(alphaUH('UH3',i) * alphaLH('LH2',i)));
-*    z =e=
-*        sum(i, sqr(miuUH('UH3',i) - miuLH('LH3',i)))
-*      + sum(i, alphaUH('UH3',i) + alphaLH('LH3',i))
-*      - 2 * sum(i, sqrt(alphaUH('UH3',i) * alphaLH('LH3',i)));
+*   z =e=
+*       sum(i, sqr(miuUH('UH3',i) - miuLH('LH2',i)))
+*     + sum(i, alphaUH('UH3',i) + alphaLH('LH2',i))
+*     - 2 * sum(i, sqrt(alphaUH('UH3',i) * alphaLH('LH2',i)));
+    z =e=
+        sum(i, sqr(miuUH('UH3',i) - miuLH('LH3',i)))
+      + sum(i, alphaUH('UH3',i) + alphaLH('LH3',i))
+      - 2 * sum(i, sqrt(alphaUH('UH3',i) * alphaLH('LH3',i)));
 
 * Define model
 Model mymodel /all/;
@@ -136,8 +136,8 @@ Model mymodel /all/;
 Option nlp = baron;
 
 * Solve the model
-*Solve mymodel maximizing z using nlp;
-Solve mymodel minimizing z using nlp;
+Solve mymodel maximizing z using nlp;
+*Solve mymodel minimizing z using nlp;
 
 * Display results
 Display pi.l;

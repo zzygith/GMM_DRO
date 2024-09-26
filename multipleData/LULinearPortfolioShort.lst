@@ -1,0 +1,329 @@
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/25/24 17:45:02 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  * Define sets
+   2  Sets
+   3      UH /UH1, UH2, UH3/
+   4      LH /LH1, LH2, LH3/
+   5      i  /1*10/;
+   6   
+   7  * Define parameters
+   8  *Scalar distanceThreshold /1.0/；
+   9  Scalar distanceThreshold /10.0/;
+  10   
+  11  Parameters wUH(UH);
+INCLUDE    E:\proj\GMM_DRO\multipleData\wUH.txt
+  13  wUH('UH1') = 0.126;
+  14  wUH('UH2') = 0.622;
+  15  wUH('UH3') = 0.252;
+  16   
+  17  Parameters wLH(LH);
+INCLUDE    E:\proj\GMM_DRO\multipleData\wLH.txt
+  19  wLH('LH1') = 0.126;
+  20  wLH('LH2') = 0.622;
+  21  wLH('LH3') = 0.252;
+  22   
+  23  Parameter miuUH(UH,i);
+INCLUDE    E:\proj\GMM_DRO\multipleData\miuUH.txt
+  25  miuUH('UH1','1')=0.825;
+  26  miuUH('UH1','2')=1.552;
+  27  miuUH('UH1','3')=2.277;
+  28  miuUH('UH1','4')=3.258;
+  29  miuUH('UH1','5')=3.842;
+  30  miuUH('UH1','6')=4.552;
+  31  miuUH('UH1','7')=5.224;
+  32  miuUH('UH1','8')=6.568;
+  33  miuUH('UH1','9')=7.079;
+  34  miuUH('UH1','10')=7.510;
+  35  miuUH('UH2','1')=2.393;
+  36  miuUH('UH2','2')=5.295;
+  37  miuUH('UH2','3')=7.657;
+  38  miuUH('UH2','4')=9.990;
+  39  miuUH('UH2','5')=12.723;
+  40  miuUH('UH2','6')=15.111;
+  41  miuUH('UH2','7')=18.159;
+  42  miuUH('UH2','8')=19.602;
+  43  miuUH('UH2','9')=22.367;
+  44  miuUH('UH2','10')=25.312;
+  45  miuUH('UH3','1')=3.961;
+  46  miuUH('UH3','2')=8.590;
+  47  miuUH('UH3','3')=12.891;
+  48  miuUH('UH3','4')=17.145;
+  49  miuUH('UH3','5')=21.333;
+  50  miuUH('UH3','6')=26.120;
+  51  miuUH('UH3','7')=29.560;
+  52  miuUH('UH3','8')=33.608;
+  53  miuUH('UH3','9')=38.710;
+  54  miuUH('UH3','10')=42.368;
+  55   
+  56  * Define parameter index(i)
+  57  Parameter index(i);
+  58  index(i) = ord(i);
+  59   
+  60  Parameter alphaUH(UH,i);
+INCLUDE    E:\proj\GMM_DRO\multipleData\alphaUH.txt
+  62  alphaUH('UH1','1')=1.94;
+  63  alphaUH('UH1','2')=3.31;
+  64  alphaUH('UH1','3')=6.67;
+  65  alphaUH('UH1','4')=6.59;
+  66  alphaUH('UH1','5')=8.26;
+  67  alphaUH('UH1','6')=9.97;
+  68  alphaUH('UH1','7')=11.40;
+  69  alphaUH('UH1','8')=12.94;
+  70  alphaUH('UH1','9')=13.73;
+  71  alphaUH('UH1','10')=20.22;
+  72  alphaUH('UH2','1')=1.92;
+  73  alphaUH('UH2','2')=3.63;
+  74  alphaUH('UH2','3')=5.27;
+  75  alphaUH('UH2','4')=7.26;
+  76  alphaUH('UH2','5')=8.79;
+  77  alphaUH('UH2','6')=12.12;
+  78  alphaUH('UH2','7')=11.66;
+  79  alphaUH('UH2','8')=14.56;
+  80  alphaUH('UH2','9')=15.50;
+  81  alphaUH('UH2','10')=15.69;
+  82  alphaUH('UH3','1')=1.93;
+  83  alphaUH('UH3','2')=3.88;
+  84  alphaUH('UH3','3')=6.43;
+  85  alphaUH('UH3','4')=7.70;
+  86  alphaUH('UH3','5')=7.65;
+  87  alphaUH('UH3','6')=10.84;
+  88  alphaUH('UH3','7')=13.48;
+  89  alphaUH('UH3','8')=14.14;
+  90  alphaUH('UH3','9')=20.26;
+  91  alphaUH('UH3','10')=21.38;
+  92   
+  93  * Define variables
+  94  Variables
+  95      miuLH(LH,i)
+  96      alphaLH(LH,i)
+  97      pi(UH,LH)
+  98      z;
+  99   
+ 100  * Set variable bounds
+ 101  miuLH.lo(LH,i)    = -10000;
+ 102  miuLH.up(LH,i)    =  10000;
+ 103   
+ 104  alphaLH.lo(LH,i)  = 0;
+ 105  alphaLH.up(LH,i)  = 10000;
+ 106   
+ 107  pi.lo(UH,LH)      = 0;
+ 108  pi.up(UH,LH)      = 1;
+ 109   
+ 110  * Initial values for variables
+ 111  Parameter pi_init(UH,LH) /
+ 112      UH1.LH1 0.0,  UH1.LH2 0.0,  UH1.LH3 0.0,
+ 113      UH2.LH1 0.0,  UH2.LH2 0.0, UH2.LH3 0.0,
+ 114      UH3.LH1 0.0,  UH3.LH2 0.0,  UH3.LH3 0.0 /;
+ 115   
+ 116  pi.L(UH,LH) = pi_init(UH,LH);
+ 117   
+ 118  * Establish mapping between UH and LH
+ 119  Set mapping(UH,LH) /
+ 120      UH1.LH1,
+ 121      UH2.LH2,
+ 122      UH3.LH3 /;
+ 123   
+ 124  * Initialize miuLH and alphaLH with corresponding miuUH and alphaUH values
+ 125  Loop((UH,LH)$(mapping(UH,LH)),
+ 126      miuLH.L(LH,i)    = miuUH(UH,i);
+ 127      alphaLH.L(LH,i)  = alphaUH(UH,i);
+ 128  );
+ 129   
+ 130  * Define equations
+ 131  Equations
+ 132      ec1(UH)
+ 133      ec2(LH)
+ 134      distanceC
+ 135      obj1;
+ 136   
+ 137  * Constraints
+ 138  ec1(UH).. sum(LH, pi(UH,LH)) =e= wUH(UH);
+ 139   
+ 140  ec2(LH).. sum(UH, pi(UH,LH)) =e= wLH(LH);
+ 141   
+ 142  * Distance constraint
+ 143  distanceC..
+ 144      sum((UH,LH),
+ 145          (
+ 146              sum(i, sqr(miuUH(UH,i) - miuLH(LH,i)))
+ 147            + sum(i, alphaUH(UH,i) + alphaLH(LH,i))
+ 148            - 2 * sum(i, sqrt(alphaUH(UH,i) * alphaLH(LH,i)))
+ 149          ) * pi(UH,LH)
+ 150      ) =l= distanceThreshold;
+ 151   
+ 152  * Objective function
+ 153  obj1..
+ 154  *    z =e=
+ 155  *       sum(i, sqr(miuUH('UH1',i) - miuLH('LH1',i)))
+ 156  *      + sum(i, alphaUH('UH1',i) + alphaLH('LH1',i))
+ 157  *      - 2 * sum(i, sqrt(alphaUH('UH1',i) * alphaLH('LH1',i)));
+ 158  *   z =e=
+ 159  *       sum(i, sqr(miuUH('UH1',i) - miuLH('LH2',i)))
+ 160  *     + sum(i, alphaUH('UH1',i) + alphaLH('LH2',i))
+ 161  *     - 2 * sum(i, sqrt(alphaUH('UH1',i) * alphaLH('LH2',i)));
+ 162  *    z =e=
+ 163  *        sum(i, sqr(miuUH('UH1',i) - miuLH('LH3',i)))
+ 164  *      + sum(i, alphaUH('UH1',i) + alphaLH('LH3',i))
+ 165  *      - 2 * sum(i, sqrt(alphaUH('UH1',i) * alphaLH('LH3',i)));
+ 166  *    z =e=
+ 167  *        sum(i, sqr(miuUH('UH2',i) - miuLH('LH1',i)))
+ 168  *      + sum(i, alphaUH('UH2',i) + alphaLH('LH1',i))
+ 169  *      - 2 * sum(i, sqrt(alphaUH('UH2',i) * alphaLH('LH1',i)));
+ 170  *   z =e=
+ 171  *       sum(i, sqr(miuUH('UH2',i) - miuLH('LH2',i)))
+ 172  *     + sum(i, alphaUH('UH2',i) + alphaLH('LH2',i))
+ 173  *     - 2 * sum(i, sqrt(alphaUH('UH2',i) * alphaLH('LH2',i)));
+ 174  *    z =e=
+ 175  *        sum(i, sqr(miuUH('UH2',i) - miuLH('LH3',i)))
+ 176  *      + sum(i, alphaUH('UH2',i) + alphaLH('LH3',i))
+ 177  *      - 2 * sum(i, sqrt(alphaUH('UH2',i) * alphaLH('LH3',i)));
+ 178  *    z =e=
+ 179  *        sum(i, sqr(miuUH('UH3',i) - miuLH('LH1',i)))
+ 180  *      + sum(i, alphaUH('UH3',i) + alphaLH('LH1',i))
+ 181  *      - 2 * sum(i, sqrt(alphaUH('UH3',i) * alphaLH('LH1',i)));
+ 182     z =e=
+ 183         sum(i, sqr(miuUH('UH3',i) - miuLH('LH2',i)))
+ 184       + sum(i, alphaUH('UH3',i) + alphaLH('LH2',i))
+ 185       - 2 * sum(i, sqrt(alphaUH('UH3',i) * alphaLH('LH2',i)));
+ 186  *    z =e=
+ 187  *        sum(i, sqr(miuUH('UH3',i) - miuLH('LH3',i)))
+ 188  *      + sum(i, alphaUH('UH3',i) + alphaLH('LH3',i))
+ 189  *      - 2 * sum(i, sqrt(alphaUH('UH3',i) * alphaLH('LH3',i)));
+ 190   
+ 191  * Define model
+ 192  Model mymodel /all/;
+ 193   
+ 194  * Select solver
+ 195  *option nlp=ANTIGONE;
+ 196  Option nlp = baron;
+ 197   
+ 198  * Solve the model
+ 199  *Solve mymodel maximizing z using nlp;
+ 200  Solve mymodel minimizing z using nlp;
+ 201   
+ 202  * Display results
+ 203  Display pi.l;
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/25/24 17:45:02 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  E:\proj\GMM_DRO\multipleData\LULinearPortfolioShort.gms
+     2       12 INCLUDE        1      12  .E:\proj\GMM_DRO\multipleData\wUH.txt
+     3       18 INCLUDE        1      15  .E:\proj\GMM_DRO\multipleData\wLH.txt
+     4       24 INCLUDE        1      18  .E:\proj\GMM_DRO\multipleData\miuUH.txt
+     5       61 INCLUDE        1      25  .E:\proj\GMM_DRO\multipleData\alphaUH.txt
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  47.6.0 c2de9d6d WEX-WEI
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/25/24 17:45:02 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE mymodel Using NLP From line 200
+
+
+---- ec1  =E=  
+
+ec1(UH1)..  pi(UH1,LH1) + pi(UH1,LH2) + pi(UH1,LH3) =E= 0.126 ; (LHS = 0, INFES = 0.126 ****)
+     
+ec1(UH2)..  pi(UH2,LH1) + pi(UH2,LH2) + pi(UH2,LH3) =E= 0.622 ; (LHS = 0, INFES = 0.622 ****)
+     
+ec1(UH3)..  pi(UH3,LH1) + pi(UH3,LH2) + pi(UH3,LH3) =E= 0.252 ; (LHS = 0, INFES = 0.252 ****)
+     
+
+---- ec2  =E=  
+
+ec2(LH1)..  pi(UH1,LH1) + pi(UH2,LH1) + pi(UH3,LH1) =E= 0.126 ; (LHS = 0, INFES = 0.126 ****)
+     
+ec2(LH2)..  pi(UH1,LH2) + pi(UH2,LH2) + pi(UH3,LH2) =E= 0.622 ; (LHS = 0, INFES = 0.622 ****)
+     
+ec2(LH3)..  pi(UH1,LH3) + pi(UH2,LH3) + pi(UH3,LH3) =E= 0.252 ; (LHS = 0, INFES = 0.252 ****)
+     
+
+---- distanceC  =L=  
+
+distanceC..  (0)*miuLH(LH1,1) + (0)*miuLH(LH1,2) + (0)*miuLH(LH1,3) + (0)*miuLH(LH1,4) + (0)*miuLH(LH1,5) + (0)*miuLH(LH1,6) + (0)*miuLH(LH1,7) + (0)*miuLH(LH1,8) + (0)*miuLH(LH1,9) + (0)*miuLH(LH1,10) + (0)*miuLH(LH2,1) + (0)*miuLH(LH2,2) + (0)*miuLH(LH2,3) + (0)*miuLH(LH2,4) + (0)*miuLH(LH2,5) + (0)*miuLH(LH2,6) + (0)*miuLH(LH2,7) + (0)*miuLH(LH2,8) + (0)*miuLH(LH2,9) + (0)*miuLH(LH2,10) + (0)*miuLH(LH3,1) + (0)*miuLH(LH3,2) + (0)*miuLH(LH3,3) + (0)*miuLH(LH3,4) + (0)*miuLH(LH3,5) + (0)*miuLH(LH3,6) + (0)*miuLH(LH3,7) + (0)*miuLH(LH3,8) + (0)*miuLH(LH3,9) + (0)*miuLH(LH3,10) + (0)*alphaLH(LH1,1) + (0)*alphaLH(LH1,2) + (0)*alphaLH(LH1,3) + (0)*alphaLH(LH1,4) + (0)*alphaLH(LH1,5) + (0)*alphaLH(LH1,6) + (0)*alphaLH(LH1,7) + (0)*alphaLH(LH1,8) + (0)*alphaLH(LH1,9) + (0)*alphaLH(LH1,10) + (0)*alphaLH(LH2,1) + (0)*alphaLH(LH2,2) + (0)*alphaLH(LH2,3) + (0)*alphaLH(LH2,4) + (0)*alphaLH(LH2,5) + (0)*alphaLH(LH2,6) + (0)*alphaLH(LH2,7) + (0)*alphaLH(LH2,8) + (0)*alphaLH(LH2,9) + (0)*alphaLH(LH2,10) + (0)*alphaLH(LH3,1) + (0)*alphaLH(LH3,2) + (0)*alphaLH(LH3,3) + (0)*alphaLH(LH3,4) + (0)*alphaLH(LH3,5) + (0)*alphaLH(LH3,6) + (0)*alphaLH(LH3,7) + (0)*alphaLH(LH3,8) + (0)*alphaLH(LH3,9) + (0)*alphaLH(LH3,10) + (0)*pi(UH1,LH1) + (1169.53993093466)*pi(UH1,LH2) + (4675.85116857875)*pi(UH1,LH3) + (1169.53993093466)*pi(UH2,LH1) + (0)*pi(UH2,LH2) + (1172.35635419518)*pi(UH2,LH3) + (4675.85116857875)*pi(UH3,LH1) + (1172.35635419518)*pi(UH3,LH2) + (0)*pi(UH3,LH3) =L= 10 ; (LHS = 0)
+     
+
+---- obj1  =E=  
+
+obj1..  (3.136)*miuLH(LH2,1) + (6.59)*miuLH(LH2,2) + (10.468)*miuLH(LH2,3) + (14.31)*miuLH(LH2,4) + (17.22)*miuLH(LH2,5) + (22.018)*miuLH(LH2,6) + (22.802)*miuLH(LH2,7) + (28.012)*miuLH(LH2,8) + (32.686)*miuLH(LH2,9) + (34.112)*miuLH(LH2,10) + (0.00260078462633029)*alphaLH(LH2,1) + (0.0338619460140595)*alphaLH(LH2,2) + (0.104587638891731)*alphaLH(LH2,3) + (0.0298573010888743)*alphaLH(LH2,4) - (0.0670974503006785)*alphaLH(LH2,5) - (0.0542783501770224)*alphaLH(LH2,6) + (0.0752158824278233)*alphaLH(LH2,7) - (0.0145286172831572)*alphaLH(LH2,8) + (0.143283330672475)*alphaLH(LH2,9) + (0.167326591104458)*alphaLH(LH2,10) + z =E= 107.69 ; (LHS = -1064.66635419518, INFES = 1172.35635419518 ****)
+     
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/25/24 17:45:02 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE mymodel Using NLP From line 200
+
+
+---- miuLH  
+
+miuLH(LH1,1)
+                (.LO, .L, .UP, .M = -10000, 0.825, 10000, 0)
+       (0)      distanceC
+
+miuLH(LH1,2)
+                (.LO, .L, .UP, .M = -10000, 1.552, 10000, 0)
+       (0)      distanceC
+
+miuLH(LH1,3)
+                (.LO, .L, .UP, .M = -10000, 2.277, 10000, 0)
+       (0)      distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- alphaLH  
+
+alphaLH(LH1,1)
+                (.LO, .L, .UP, .M = 0, 1.94, 10000, 0)
+       (0)      distanceC
+
+alphaLH(LH1,2)
+                (.LO, .L, .UP, .M = 0, 3.31, 10000, 0)
+       (0)      distanceC
+
+alphaLH(LH1,3)
+                (.LO, .L, .UP, .M = 0, 6.67, 10000, 0)
+       (0)      distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- pi  
+
+pi(UH1,LH1)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH1)
+       (0)      distanceC
+
+pi(UH1,LH2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH2)
+    (1169.5399) distanceC
+
+pi(UH1,LH3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH3)
+    (4675.8512) distanceC
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       obj1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/25/24 17:45:02 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE mymodel Using NLP From line 200
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.260E-01, 1.077E+02]
+Bound     [
