@@ -3,28 +3,28 @@ import numpy as np
 from sklearn.mixture import GaussianMixture
 import subprocess
 import concurrent.futures
-
+import pickle
 
 #mat = scipy.io.loadmat('samples_50.mat')
 mat = scipy.io.loadmat('samples_500.mat')
 print(len(mat['xi']))
 
 def run_gams(gams_file):
-    print(f"开始运行: {gams_file}")  # 打印任务开始信息
+    print(f"Task starts: {gams_file}")  # 打印任务开始信息
     result = subprocess.run(['/mnt/d/gams/47/gams.exe', gams_file], capture_output=True, text=True)
-    print(f"完成运行: {gams_file}")  # 打印任务结束信息
+    print(f"Task ends: {gams_file}")  # 打印任务结束信息
     return result.stdout
 
 resultOBJ={}
 
 #for i in range(0,len(mat['xi'])):
-for sampleOrder in range(0,3):
+for sampleOrder in range(0,6):
     resultOBJ[sampleOrder]={}
     sample=np.hstack(mat['xi'][sampleOrder])
     gm = GaussianMixture(n_components=3, covariance_type="diag", random_state=0).fit(sample)
-    print(gm.weights_)
-    print(gm.means_)
-    print(gm.covariances_)
+    # print(gm.weights_)
+    # print(gm.means_)
+    # print(gm.covariances_)
     print('########################',sampleOrder)
 
     with open('wUH.txt', 'w') as f:
@@ -47,7 +47,7 @@ for sampleOrder in range(0,3):
             for j, value in enumerate(row, 1):
                 f.write(f"alphaUH('UH{i}','{j}')={value:.6f};\n")
     
-    gams_files = ['LULinearPortfolioShortLoopMax.gms', 'LULinearPortfolioShortLoopMin.gms']
+    gams_files = ['LULinearPortfolioShortLoopMax_1.gms', 'LULinearPortfolioShortLoopMin_1.gms']
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
         # 提交多个任务并行运行
@@ -83,3 +83,6 @@ for sampleOrder in range(0,3):
     resultOBJ[sampleOrder]['1_lower']=resultsMIN_1
 
 print(resultOBJ)
+
+with open('resultOBJ.pkl', 'wb') as f:
+    pickle.dump(resultOBJ, f)
