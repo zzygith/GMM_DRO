@@ -104,8 +104,8 @@ Model mymodel / ec1, ec2, distanceC, obj1 /;
 mymodel.OptCR = 0.01;
 * Absolute convergence tolerance
 mymodel.OptCA = 0.1;
-* Set maximum solution time (e.g., 10 seconds)
-mymodel.ResLim = 10;
+* Set maximum solution time (e.g., 30 seconds)
+mymodel.ResLim = 30;
 
 * Choose solver
 Option nlp = baron;
