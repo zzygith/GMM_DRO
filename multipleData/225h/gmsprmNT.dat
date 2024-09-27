@@ -1,0 +1,4 @@
+Input=LULinearPortfolioShortLoopMax_30.gms
+ScrDir=225h
+SysDir=D:\gams\47
+ScriptNext=225h\gamsnext.cmd
