@@ -1,0 +1,2986 @@
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  * Define sets
+   2  Sets
+   3      UH /UH1*UH3/
+   4      LH /LH1*LH3/
+   5      i  /1*10/;
+   6   
+   7  * Define parameters
+   8  Scalar distanceThreshold /35.0/;
+   9   
+  10  Parameters wUH(UH);
+INCLUDE    E:\proj\GMM_DRO\multipleData\wUH.txt
+  12  wUH('UH1') = 0.660;
+  13  wUH('UH2') = 0.180;
+  14  wUH('UH3') = 0.160;
+  15   
+  16  Parameters wLH(LH);
+INCLUDE    E:\proj\GMM_DRO\multipleData\wLH.txt
+  18  wLH('LH1') = 0.660;
+  19  wLH('LH2') = 0.180;
+  20  wLH('LH3') = 0.160;
+  21   
+  22  Parameter miuUH(UH,i);
+INCLUDE    E:\proj\GMM_DRO\multipleData\miuUH.txt
+  24  miuUH('UH1','1')=0.875329;
+  25  miuUH('UH1','2')=1.162161;
+  26  miuUH('UH1','3')=2.015887;
+  27  miuUH('UH1','4')=2.603515;
+  28  miuUH('UH1','5')=4.086908;
+  29  miuUH('UH1','6')=4.246876;
+  30  miuUH('UH1','7')=6.393212;
+  31  miuUH('UH1','8')=6.150594;
+  32  miuUH('UH1','9')=6.943042;
+  33  miuUH('UH1','10')=6.721610;
+  34  miuUH('UH2','1')=4.727227;
+  35  miuUH('UH2','2')=8.367530;
+  36  miuUH('UH2','3')=12.080734;
+  37  miuUH('UH2','4')=17.526614;
+  38  miuUH('UH2','5')=20.779234;
+  39  miuUH('UH2','6')=25.275536;
+  40  miuUH('UH2','7')=29.450223;
+  41  miuUH('UH2','8')=33.162544;
+  42  miuUH('UH2','9')=38.960595;
+  43  miuUH('UH2','10')=42.454121;
+  44  miuUH('UH3','1')=2.097307;
+  45  miuUH('UH3','2')=4.386629;
+  46  miuUH('UH3','3')=6.846591;
+  47  miuUH('UH3','4')=11.121835;
+  48  miuUH('UH3','5')=12.049723;
+  49  miuUH('UH3','6')=14.413189;
+  50  miuUH('UH3','7')=17.242770;
+  51  miuUH('UH3','8')=18.089057;
+  52  miuUH('UH3','9')=23.289866;
+  53  miuUH('UH3','10')=26.277090;
+  54   
+  55  * Define parameter index(i)
+  56  Parameter index(i);
+  57  index(i) = ord(i);
+  58   
+  59  Parameter alphaUH(UH,i);
+INCLUDE    E:\proj\GMM_DRO\multipleData\alphaUH.txt
+  61  alphaUH('UH1','1')=2.641925;
+  62  alphaUH('UH1','2')=3.083101;
+  63  alphaUH('UH1','3')=3.316820;
+  64  alphaUH('UH1','4')=6.443530;
+  65  alphaUH('UH1','5')=10.233479;
+  66  alphaUH('UH1','6')=12.109956;
+  67  alphaUH('UH1','7')=12.899092;
+  68  alphaUH('UH1','8')=19.130398;
+  69  alphaUH('UH1','9')=12.753758;
+  70  alphaUH('UH1','10')=16.149343;
+  71  alphaUH('UH2','1')=1.142036;
+  72  alphaUH('UH2','2')=5.406340;
+  73  alphaUH('UH2','3')=2.200251;
+  74  alphaUH('UH2','4')=5.543769;
+  75  alphaUH('UH2','5')=3.210911;
+  76  alphaUH('UH2','6')=17.276943;
+  77  alphaUH('UH2','7')=15.741782;
+  78  alphaUH('UH2','8')=4.688544;
+  79  alphaUH('UH2','9')=21.760959;
+  80  alphaUH('UH2','10')=13.666771;
+  81  alphaUH('UH3','1')=1.659865;
+  82  alphaUH('UH3','2')=0.780038;
+  83  alphaUH('UH3','3')=4.003264;
+  84  alphaUH('UH3','4')=6.763050;
+  85  alphaUH('UH3','5')=15.098508;
+  86  alphaUH('UH3','6')=13.221300;
+  87  alphaUH('UH3','7')=28.777291;
+  88  alphaUH('UH3','8')=32.077920;
+  89  alphaUH('UH3','9')=16.900354;
+  90  alphaUH('UH3','10')=6.559471;
+  91   
+  92  * Define variables
+  93  Variables
+  94      miuLH(LH,i)
+  95      alphaLH(LH,i)
+  96      pi(UH,LH)
+  97      z;
+  98   
+  99  * Set variable bounds
+ 100  miuLH.lo(LH,i)    = -10000;
+ 101  miuLH.up(LH,i)    =  10000;
+ 102   
+ 103  alphaLH.lo(LH,i)  = 0;
+ 104  alphaLH.up(LH,i)  = 10000;
+ 105   
+ 106  pi.lo(UH,LH)      = 0;
+ 107  pi.up(UH,LH)      = 1;
+ 108   
+ 109  * Initial values for variables
+ 110  Parameter pi_init(UH,LH) /
+ 111      UH1.LH1 0.0,  UH1.LH2 0.0,  UH1.LH3 0.0,
+ 112      UH2.LH1 0.0,  UH2.LH2 0.0,  UH2.LH3 0.0,
+ 113      UH3.LH1 0.0,  UH3.LH2 0.0,  UH3.LH3 0.0 /;
+ 114   
+ 115  pi.l(UH,LH) = pi_init(UH,LH);
+ 116   
+ 117  * Establish mapping relationship between UH and LH
+ 118  Set mapping(UH,LH) /
+ 119      UH1.LH1,
+ 120      UH2.LH2,
+ 121      UH3.LH3 /;
+ 122   
+ 123  * Initialize miuLH and alphaLH with corresponding miuUH and alphaUH
+ 124  Loop((UH,LH)$(mapping(UH,LH)),
+ 125      miuLH.l(LH,i)    = miuUH(UH,i);
+ 126      alphaLH.l(LH,i)  = alphaUH(UH,i);
+ 127  );
+ 128   
+ 129  * Define aliases
+ 130  Alias (UH, UHval), (LH, LHval);
+ 131   
+ 132  * Define equations
+ 133  Equations
+ 134      ec1(UH)
+ 135      ec2(LH)
+ 136      distanceC
+ 137      obj1;
+ 138   
+ 139  * Constraints
+ 140  ec1(UH).. sum(LH, pi(UH,LH)) =e= wUH(UH);
+ 141   
+ 142  ec2(LH).. sum(UH, pi(UH,LH)) =e= wLH(LH);
+ 143   
+ 144  * Distance constraint
+ 145  distanceC..
+ 146      sum((UH,LH),
+ 147          (
+ 148              sum(i, sqr(miuUH(UH,i) - miuLH(LH,i)))
+ 149            + sum(i, alphaUH(UH,i) + alphaLH(LH,i))
+ 150            - 2 * sum(i, sqrt(alphaUH(UH,i) * alphaLH(LH,i)))
+ 151          ) * pi(UH,LH)
+ 152      ) =l= distanceThreshold;
+ 153   
+ 154  * Define parameter
+ 155  Parameter isActive(UH,LH);
+ 156   
+ 157  * Define objective function
+ 158  obj1..
+ 159      z =e=
+ 160          sum((UH,LH)$(isActive(UH,LH)),
+ 161              sum(i, sqr(miuUH(UH,i) - miuLH(LH,i)))
+ 162            + sum(i, alphaUH(UH,i) + alphaLH(LH,i))
+ 163            - 2 * sum(i, sqrt(alphaUH(UH,i) * alphaLH(LH,i)))
+ 164          );
+ 165   
+ 166  * Define model
+ 167  Model mymodel / ec1, ec2, distanceC, obj1 /;
+ 168   
+ 169  * Relative convergence tolerance
+ 170  mymodel.OptCR = 0.01;
+ 171  * Absolute convergence tolerance
+ 172  mymodel.OptCA = 0.1;
+ 173  * Set maximum solution time (e.g., 30 seconds)
+ 174  mymodel.ResLim = 30;
+ 175   
+ 176  * Choose solver
+ 177  Option nlp = baron;
+ 178   
+ 179  * Define objective function combination set
+ 180  Sets
+ 181      ObjComb(UHval,LHval);
+ 182  ObjComb(UHval,LHval) = YES;
+ 183  * Iterate over all UH and LH combinations
+ 184   
+ 185  * Define result parameters
+ 186  Parameter
+ 187      z_results(UH,LH)               "Objective function value"
+ 188      pi_results(UH,LH,UHval,LHval)  "Value of pi variable";
+ 189   
+ 190  * Loop through objective function combinations
+ 191  Loop(ObjComb(UHval,LHval),
+ 192  * Reset isActive parameter
+ 193      isActive(UH,LH) = 0;
+ 194   
+ 195  * Set the current combination as active
+ 196      isActive(UHval,LHval) = 1;
+ 197   
+ 198  * Reset variable initial values (if necessary)
+ 199      Loop(i,
+ 200          miuLH.l(LHval,i)    = miuUH(UHval,i);
+ 201          alphaLH.l(LHval,i)  = alphaUH(UHval,i);
+ 202      );
+ 203   
+ 204  * Solve the model
+ 205      Solve mymodel minimizing z using nlp;
+ 206  *    Solve mymodel maximizing z using nlp;
+ 207   
+ 208  * Save results
+ 209      z_results(UHval,LHval) = z.l;
+ 210      pi_results(UH,LH,UHval,LHval) = pi.l(UH,LH);
+ 211   
+ 212      Display 'Objective Value =', z.l;
+ 213  );
+ 214   
+ 215  * Display all results
+ 216  Display 'Final results for saving =', z_results;
+ 217   
+ 218  file resultsFile /'resultsMIN_35.txt'/;
+ 219  put resultsFile;
+ 220  loop(UHval,
+ 221          loop(LHval,
+ 222                  put "z_results(", UHval.tl, ",", LHval.tl, ") = " z_results(UHval,LHval) /;
+ 223          );
+ 224  );
+ 225  putclose resultsFile;
+ 226  Display 'Results saved to results.txt';
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  E:\proj\GMM_DRO\multipleData\LULinearPortfolioShortLoopMin_35.gms
+     2       11 INCLUDE        1      11  .E:\proj\GMM_DRO\multipleData\wUH.txt
+     3       17 INCLUDE        1      14  .E:\proj\GMM_DRO\multipleData\wLH.txt
+     4       23 INCLUDE        1      17  .E:\proj\GMM_DRO\multipleData\miuUH.txt
+     5       60 INCLUDE        1      24  .E:\proj\GMM_DRO\multipleData\alphaUH.txt
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  47.6.0 c2de9d6d WEX-WEI
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE mymodel Using NLP From line 205
+
+
+---- ec1  =E=  
+
+ec1(UH1)..  pi(UH1,LH1) + pi(UH1,LH2) + pi(UH1,LH3) =E= 0.66 ; (LHS = 0, INFES = 0.66 ****)
+     
+ec1(UH2)..  pi(UH2,LH1) + pi(UH2,LH2) + pi(UH2,LH3) =E= 0.18 ; (LHS = 0, INFES = 0.18 ****)
+     
+ec1(UH3)..  pi(UH3,LH1) + pi(UH3,LH2) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0, INFES = 0.16 ****)
+     
+
+---- ec2  =E=  
+
+ec2(LH1)..  pi(UH1,LH1) + pi(UH2,LH1) + pi(UH3,LH1) =E= 0.66 ; (LHS = 0, INFES = 0.66 ****)
+     
+ec2(LH2)..  pi(UH1,LH2) + pi(UH2,LH2) + pi(UH3,LH2) =E= 0.18 ; (LHS = 0, INFES = 0.18 ****)
+     
+ec2(LH3)..  pi(UH1,LH3) + pi(UH2,LH3) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0, INFES = 0.16 ****)
+     
+
+---- distanceC  =L=  
+
+distanceC..  (0)*miuLH(LH1,1) + (0)*miuLH(LH1,2) + (0)*miuLH(LH1,3) + (0)*miuLH(LH1,4) + (0)*miuLH(LH1,5) + (0)*miuLH(LH1,6) + (0)*miuLH(LH1,7) + (0)*miuLH(LH1,8) + (0)*miuLH(LH1,9) + (0)*miuLH(LH1,10) + (0)*miuLH(LH2,1) + (0)*miuLH(LH2,2) + (0)*miuLH(LH2,3) + (0)*miuLH(LH2,4) + (0)*miuLH(LH2,5) + (0)*miuLH(LH2,6) + (0)*miuLH(LH2,7) + (0)*miuLH(LH2,8) + (0)*miuLH(LH2,9) + (0)*miuLH(LH2,10) + (0)*miuLH(LH3,1) + (0)*miuLH(LH3,2) + (0)*miuLH(LH3,3) + (0)*miuLH(LH3,4) + (0)*miuLH(LH3,5) + (0)*miuLH(LH3,6) + (0)*miuLH(LH3,7) + (0)*miuLH(LH3,8) + (0)*miuLH(LH3,9) + (0)*miuLH(LH3,10) + (0)*alphaLH(LH1,1) + (0)*alphaLH(LH1,2) + (0)*alphaLH(LH1,3) + (0)*alphaLH(LH1,4) + (0)*alphaLH(LH1,5) + (0)*alphaLH(LH1,6) + (0)*alphaLH(LH1,7) + (0)*alphaLH(LH1,8) + (0)*alphaLH(LH1,9) + (0)*alphaLH(LH1,10) + (0)*alphaLH(LH2,1) + (0)*alphaLH(LH2,2) + (0)*alphaLH(LH2,3) + (0)*alphaLH(LH2,4) + (0)*alphaLH(LH2,5) + (0)*alphaLH(LH2,6) + (0)*alphaLH(LH2,7) + (0)*alphaLH(LH2,8) + (0)*alphaLH(LH2,9) + (0)*alphaLH(LH2,10) + (0)*alphaLH(LH3,1) + (0)*alphaLH(LH3,2) + (0)*alphaLH(LH3,3) + (0)*alphaLH(LH3,4) + (0)*alphaLH(LH3,5) + (0)*alphaLH(LH3,6) + (0)*alphaLH(LH3,7) + (0)*alphaLH(LH3,8) + (0)*alphaLH(LH3,9) + (0)*alphaLH(LH3,10) + (0)*pi(UH1,LH1) + (4684.33828125973)*pi(UH1,LH2) + (1193.05341572595)*pi(UH1,LH3) + (4684.33828125973)*pi(UH2,LH1) + (0)*pi(UH2,LH2) + (1191.77390353288)*pi(UH2,LH3) + (1193.05341572595)*pi(UH3,LH1) + (1191.77390353288)*pi(UH3,LH2) + (0)*pi(UH3,LH3) =L= 35 ; (LHS = 0)
+     
+
+---- obj1  =E=  
+
+obj1..  (0)*miuLH(LH1,1) + (0)*miuLH(LH1,2) + (0)*miuLH(LH1,3) + (0)*miuLH(LH1,4) + (0)*miuLH(LH1,5) + (0)*miuLH(LH1,6) + (0)*miuLH(LH1,7) + (0)*miuLH(LH1,8) + (0)*miuLH(LH1,9) + (0)*miuLH(LH1,10) + (0)*alphaLH(LH1,1) - (1.11022302462516E-16)*alphaLH(LH1,2) - (1.11022302462516E-16)*alphaLH(LH1,3) - (1.11022302462516E-16)*alphaLH(LH1,4) + (0)*alphaLH(LH1,5) + (0)*alphaLH(LH1,6) + (0)*alphaLH(LH1,7) + (0)*alphaLH(LH1,8) + (0)*alphaLH(LH1,9) + (0)*alphaLH(LH1,10) + z =E= 98.761402 ; (LHS = 98.761402)
+     
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE mymodel Using NLP From line 205
+
+
+---- miuLH  
+
+miuLH(LH1,1)
+                (.LO, .L, .UP, .M = -10000, 0.875329, 10000, 0)
+       (0)      distanceC
+       (0)      obj1
+
+miuLH(LH1,2)
+                (.LO, .L, .UP, .M = -10000, 1.162161, 10000, 0)
+       (0)      distanceC
+       (0)      obj1
+
+miuLH(LH1,3)
+                (.LO, .L, .UP, .M = -10000, 2.015887, 10000, 0)
+       (0)      distanceC
+       (0)      obj1
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- alphaLH  
+
+alphaLH(LH1,1)
+                (.LO, .L, .UP, .M = 0, 2.641925, 10000, 0)
+       (0)      distanceC
+       (0)      obj1
+
+alphaLH(LH1,2)
+                (.LO, .L, .UP, .M = 0, 3.083101, 10000, 0)
+       (0)      distanceC
+ (-1.11022E-16) obj1
+
+alphaLH(LH1,3)
+                (.LO, .L, .UP, .M = 0, 3.31682, 10000, 0)
+       (0)      distanceC
+ (-1.11022E-16) obj1
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- pi  
+
+pi(UH1,LH1)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH1)
+       (0)      distanceC
+
+pi(UH1,LH2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH2)
+    (4684.3383) distanceC
+
+pi(UH1,LH3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH3)
+    (1193.0534) distanceC
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       obj1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE mymodel Using NLP From line 205
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.600E-01, 9.876E+01]
+Bound     [min, max] : [ 1.000E+00, 1.000E+04] - Zero values observed as well
+Matrix    [min, max] : [ 1.110E-16, 4.684E+03] - Zero values observed as well
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mymodel Using NLP From line 205
+
+
+LOOPS                           *            UH1
+                                *            LH1
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES           70
+NON ZERO ELEMENTS           108     NON LINEAR N-Z             89
+CODE LENGTH                 932     CONSTANT POOL              79
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  47.6.0 c2de9d6d WEX-WEI
+               L O O P S         *          UH1
+                                 *          LH1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mymodel Using NLP From line 205
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mymodel             OBJECTIVE  z
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  BARON               FROM LINE  205
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                0.0000
+
+ RESOURCE USAGE, LIMIT          0.470        30.000
+ ITERATION COUNT, LIMIT         0    2147483647
+ EVALUATION ERRORS              0             0
+
+GAMS/BARON       47.6.0 c2de9d6d Sep 12, 2024          WEI x86 64bit/MS Window
+
+BARON is a product of The Optimization Firm, LLC. http://www.minlp.com/
+Parts of the BARON software were created at the
+University of Illinois at Urbana-Champaign.
+
+
+===========================================================================
+ BARON version 24.5.8. Built: WIN-64 Wed May 8 10:05:37 EDT 2024 
+ Running on machine ZHONGYU_CAMPUS
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC, ILOG CPLEX                             
+
+Solution      = 0  found at node 1
+Best possible = 0
+Absolute gap  = 0  optca = 0.1
+Relative gap  = 0  optcr = 0.01
+
+
+---- EQU ec1  
+
+           LOWER          LEVEL          UPPER
+
+UH1         0.6600         0.6600         0.6600      
+UH2         0.1800         0.1800         0.1800      
+UH3         0.1600         0.1600         0.1600      
+
+---- EQU ec2  
+
+           LOWER          LEVEL          UPPER
+
+LH1         0.6600         0.6600         0.6600      
+LH2         0.1800         0.1800         0.1800      
+LH3         0.1600         0.1600         0.1600      
+
+                           LOWER          LEVEL          UPPER
+
+---- EQU distanceC         -INF           32.0083        35.0000      
+---- EQU obj1              98.7614        98.7614        98.7614      
+
+---- VAR miuLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1     -10000.0000         0.8753     10000.0000      
+LH1.2     -10000.0000         1.1622     10000.0000      
+LH1.3     -10000.0000         2.0159     10000.0000      
+LH1.4     -10000.0000         2.6035     10000.0000      
+LH1.5     -10000.0000         4.0869     10000.0000      
+LH1.6     -10000.0000         4.2469     10000.0000      
+LH1.7     -10000.0000         6.3932     10000.0000      
+LH1.8     -10000.0000         6.1506     10000.0000      
+LH1.9     -10000.0000         6.9430     10000.0000      
+LH1.10    -10000.0000         6.7216     10000.0000      
+LH2.1     -10000.0000         4.7127     10000.0000      
+LH2.2     -10000.0000         8.3446     10000.0000      
+LH2.3     -10000.0000        12.0502     10000.0000      
+LH2.4     -10000.0000        17.4876     10000.0000      
+LH2.5     -10000.0000        20.7284     10000.0000      
+LH2.6     -10000.0000        25.2121     10000.0000      
+LH2.7     -10000.0000        29.3793     10000.0000      
+LH2.8     -10000.0000        33.0759     10000.0000      
+LH2.9     -10000.0000        38.8679     10000.0000      
+LH2.10    -10000.0000        42.3568     10000.0000      
+LH3.1     -10000.0000         2.1044     10000.0000      
+LH3.2     -10000.0000         4.3901     10000.0000      
+LH3.3     -10000.0000         6.8480     10000.0000      
+LH3.4     -10000.0000        11.1099     10000.0000      
+LH3.5     -10000.0000        12.0526     10000.0000      
+LH3.6     -10000.0000        14.4154     10000.0000      
+LH3.7     -10000.0000        17.2483     10000.0000      
+LH3.8     -10000.0000        18.1035     10000.0000      
+LH3.9     -10000.0000        23.2842     10000.0000      
+LH3.10    -10000.0000        26.2572     10000.0000      
+
+---- VAR alphaLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1           .             2.6419     10000.0000      
+LH1.2           .             3.0831     10000.0000      
+LH1.3           .             3.3168     10000.0000      
+LH1.4           .             6.4435     10000.0000      
+LH1.5           .            10.2335     10000.0000      
+LH1.6           .            12.1100     10000.0000      
+LH1.7           .            12.8991     10000.0000      
+LH1.8           .            19.1304     10000.0000      
+LH1.9           .            12.7538     10000.0000      
+LH1.10          .            16.1493     10000.0000      
+LH2.1           .             7.2124     10000.0000      
+LH2.2           .            13.6967     10000.0000      
+LH2.3           .             9.1423     10000.0000      
+LH2.4           .            13.8122     10000.0000      
+LH2.5           .            10.6662     10000.0000      
+LH2.6           .            26.3660     10000.0000      
+LH2.7           .            24.7654     10000.0000      
+LH2.8           .            12.6331     10000.0000      
+LH2.9           .            30.7769     10000.0000      
+LH2.10          .            22.8042     10000.0000      
+LH3.1           .             8.8611     10000.0000      
+LH3.2           .             6.9223     10000.0000      
+LH3.3           .            12.6498     10000.0000      
+LH3.4           .            16.2108     10000.0000      
+LH3.5           .            25.4939     10000.0000      
+LH3.6           .            23.2977     10000.0000      
+LH3.7           .            38.7936     10000.0000      
+LH3.8           .            42.1490     10000.0000      
+LH3.9           .            27.0618     10000.0000      
+LH3.10          .            15.8422     10000.0000      
+
+---- VAR pi  
+
+               LOWER          LEVEL          UPPER
+
+UH1.LH1          .             0.6576         1.0000      
+UH1.LH2          .             0.0010         1.0000      
+UH1.LH3          .             0.0013         1.0000      
+UH2.LH1          .             0.0009         1.0000      
+UH2.LH2          .             0.1733         1.0000      
+UH2.LH3          .             0.0058         1.0000      
+UH3.LH1          .             0.0014         1.0000      
+UH3.LH2          .             0.0057         1.0000      
+UH3.LH3          .             0.1529         1.0000      
+
+                           LOWER          LEVEL          UPPER
+
+---- VAR z                 -INF             .            +INF         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 8
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    212 Objective Value =
+            VARIABLE z.L                   =        0.000  
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 9
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE mymodel Using NLP From line 205
+
+
+---- ec1  =E=  
+
+ec1(UH1)..  pi(UH1,LH1) + pi(UH1,LH2) + pi(UH1,LH3) =E= 0.66 ; (LHS = 0.660000000000001)
+     
+ec1(UH2)..  pi(UH2,LH1) + pi(UH2,LH2) + pi(UH2,LH3) =E= 0.18 ; (LHS = 0.180000000000001)
+     
+ec1(UH3)..  pi(UH3,LH1) + pi(UH3,LH2) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- ec2  =E=  
+
+ec2(LH1)..  pi(UH1,LH1) + pi(UH2,LH1) + pi(UH3,LH1) =E= 0.66 ; (LHS = 0.660000000000001)
+     
+ec2(LH2)..  pi(UH1,LH2) + pi(UH2,LH2) + pi(UH3,LH2) =E= 0.18 ; (LHS = 0.180000000000001)
+     
+ec2(LH3)..  pi(UH1,LH3) + pi(UH2,LH3) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- distanceC  =L=  
+
+distanceC..  - (0.0107816289377649)*miuLH(LH1,1) - (0.0228583720404196)*miuLH(LH1,2) - (0.0328658593286956)*miuLH(LH1,3) - (0.0526160983965728)*miuLH(LH1,4) - (0.0543674318757466)*miuLH(LH1,5) - (0.0688776968364119)*miuLH(LH1,6) - (0.0746691242377155)*miuLH(LH1,7) - (0.0852640766984205)*miuLH(LH1,8) - (0.107358518592049)*miuLH(LH1,9) - (0.123575411115038)*miuLH(LH1,10) - (1.34869936634486)*miuLH(LH2,1) - (2.53357346751873)*miuLH(LH2,2) - (3.54275243461699)*miuLH(LH2,3) - (5.26826824417619)*miuLH(LH2,4) - (5.87502054275121)*miuLH(LH2,5) - (7.4027709755191)*miuLH(LH2,6) - (8.11342866415697)*miuLH(LH2,7) - (9.49631824540608)*miuLH(LH2,8) - (11.2811059407602)*miuLH(LH2,9) - (12.6049855285833)*miuLH(LH2,10) - (0.0249457589157756)*miuLH(LH3,1) - (0.0363984114482827)*miuLH(LH3,2) - (0.0472715363076128)*miuLH(LH3,3) - (0.0552611891579009)*miuLH(LH3,4) - (0.0789325015055675)*miuLH(LH3,5) - (0.0979620891498198)*miuLH(LH3,6) - (0.110663227494182)*miuLH(LH3,7) - (0.138089108246595)*miuLH(LH3,8) - (0.139661983476335)*miuLH(LH3,9) - (0.141518865346508)*miuLH(LH3,10) + (0.000620809018890097)*alphaLH(LH1,1) + (0.00040588886117326)*alphaLH(LH1,2) + (3.39832969065402E-5)*alphaLH(LH1,3) + (3.33499686957117E-5)*alphaLH(LH1,4) + (0.000107992469617458)*alphaLH(LH1,5) - (0.000248033741381963)*alphaLH(LH1,6) - (0.000806350362135441)*alphaLH(LH1,7) + (5.4487612824002E-5)*alphaLH(LH1,8) - (0.000505951733153306)*alphaLH(LH1,9) + (0.000595399335870559)*alphaLH(LH1,10) + (0.0605277617333795)*alphaLH(LH2,1) - (0.0533428137647061)*alphaLH(LH2,2) + (0.0315835971614163)*alphaLH(LH2,3) + (0.0124121113622935)*alphaLH(LH2,4) + (0.0749870951275575)*alphaLH(LH2,5) - (0.0339437401618606)*alphaLH(LH2,6) - (0.0209537991228156)*alphaLH(LH2,7) + (0.0858073523398548)*alphaLH(LH2,8) - (0.0539192227799121)*alphaLH(LH2,9) + (0.0159387722446926)*alphaLH(LH2,10) + (0.0910272650818605)*alphaLH(LH3,1) + (0.102672036891999)*alphaLH(LH3,2) + (0.0709015180187605)*alphaLH(LH3,3) + (0.0570296306054915)*alphaLH(LH3,4) + (0.0394525221093739)*alphaLH(LH3,5) + (0.0388871138608339)*alphaLH(LH3,6) + (0.0238747047309025)*alphaLH(LH3,7) + (0.0238051097658732)*alphaLH(LH3,8) + (0.0330805144446902)*alphaLH(LH3,9) + (0.0549028906000381)*alphaLH(LH3,10) + (0)*pi(UH1,LH1) + (0)*pi(UH1,LH2) + (1211.02208318205)*pi(UH1,LH3) + (4684.33828125966)*pi(UH2,LH1) + (4684.33828125973)*pi(UH2,LH2) + (1215.19346626599)*pi(UH2,LH3) + (1193.0534157259)*pi(UH3,LH1) + (1193.05341572595)*pi(UH3,LH2) + (17.76814937255)*pi(UH3,LH3) =L= 35 ; (LHS = 835.925598573534, INFES = 800.925598573534 ****)
+     
+
+---- obj1  =E=  
+
+obj1..  (0)*miuLH(LH2,1) + (0)*miuLH(LH2,2) + (0)*miuLH(LH2,3) + (0)*miuLH(LH2,4) + (0)*miuLH(LH2,5) + (0)*miuLH(LH2,6) + (0)*miuLH(LH2,7) + (0)*miuLH(LH2,8) + (0)*miuLH(LH2,9) + (0)*miuLH(LH2,10) + (0)*alphaLH(LH2,1) - (1.11022302462516E-16)*alphaLH(LH2,2) - (1.11022302462516E-16)*alphaLH(LH2,3) - (1.11022302462516E-16)*alphaLH(LH2,4) + (0)*alphaLH(LH2,5) + (0)*alphaLH(LH2,6) + (0)*alphaLH(LH2,7) + (0)*alphaLH(LH2,8) + (0)*alphaLH(LH2,9) + (0)*alphaLH(LH2,10) + z =E= 98.761402 ; (LHS = 98.761402)
+     
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 10
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE mymodel Using NLP From line 205
+
+
+---- miuLH  
+
+miuLH(LH1,1)
+                (.LO, .L, .UP, .M = -10000, 0.875329000000027, 10000, NA)
+      (-0.0108) distanceC
+
+miuLH(LH1,2)
+                (.LO, .L, .UP, .M = -10000, 1.16216100000006, 10000, NA)
+      (-0.0229) distanceC
+
+miuLH(LH1,3)
+                (.LO, .L, .UP, .M = -10000, 2.01588700000009, 10000, NA)
+      (-0.0329) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- alphaLH  
+
+alphaLH(LH1,1)
+                (.LO, .L, .UP, .M = 0, 2.64192500001996, 10000, NA)
+       (0.0006) distanceC
+
+alphaLH(LH1,2)
+                (.LO, .L, .UP, .M = 0, 3.08310100001994, 10000, NA)
+       (0.0004) distanceC
+
+alphaLH(LH1,3)
+                (.LO, .L, .UP, .M = 0, 3.31682000001999, 10000, NA)
+ (3.3983297E-5) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- pi  
+
+pi(UH1,LH1)
+                (.LO, .L, .UP, .M = 0, 0.657622043988399, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH1)
+       (0)      distanceC
+
+pi(UH1,LH2)
+                (.LO, .L, .UP, .M = 0, 0.00104136088139886, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH2)
+       (0)      distanceC
+
+pi(UH1,LH3)
+                (.LO, .L, .UP, .M = 0, 0.0013365951302034, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH3)
+    (1211.0221) distanceC
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       obj1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 11
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE mymodel Using NLP From line 205
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.600E-01, 9.876E+01]
+Bound     [min, max] : [ 1.000E+00, 1.000E+04] - Zero values observed as well
+Matrix    [min, max] : [ 1.110E-16, 4.684E+03] - Zero values observed as well
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 12
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mymodel Using NLP From line 205
+
+
+LOOPS                           *            UH1
+                                *            LH2
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES           70
+NON ZERO ELEMENTS           108     NON LINEAR N-Z             89
+CODE LENGTH                 932     CONSTANT POOL              79
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  47.6.0 c2de9d6d WEX-WEI
+               L O O P S         *          UH1
+                                 *          LH2
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 13
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mymodel Using NLP From line 205
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mymodel             OBJECTIVE  z
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  BARON               FROM LINE  205
+
+**** SOLVER STATUS     3 Resource Interrupt
+**** MODEL STATUS      7 Feasible Solution
+**** OBJECTIVE VALUE              869.8158
+
+ RESOURCE USAGE, LIMIT         40.860        30.000
+ ITERATION COUNT, LIMIT         0    2147483647
+ EVALUATION ERRORS              0             0
+
+GAMS/BARON       47.6.0 c2de9d6d Sep 12, 2024          WEI x86 64bit/MS Window
+
+BARON is a product of The Optimization Firm, LLC. http://www.minlp.com/
+Parts of the BARON software were created at the
+University of Illinois at Urbana-Champaign.
+
+
+===========================================================================
+ BARON version 24.5.8. Built: WIN-64 Wed May 8 10:05:37 EDT 2024 
+ Running on machine ZHONGYU_CAMPUS
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC, ILOG CPLEX                             
+
+Solution      = 869.815823771819  found at node 50
+Best possible = -9.43384748097742E-9
+Absolute gap  = 869.815823781253  optca = 0.1
+Relative gap  = NA  optcr = 0.01
+
+
+---- EQU ec1  
+
+           LOWER          LEVEL          UPPER
+
+UH1         0.6600         0.6600         0.6600      
+UH2         0.1800         0.1800         0.1800      
+UH3         0.1600         0.1600         0.1600      
+
+---- EQU ec2  
+
+           LOWER          LEVEL          UPPER
+
+LH1         0.6600         0.6600         0.6600      
+LH2         0.1800         0.1800         0.1800      
+LH3         0.1600         0.1600         0.1600      
+
+                           LOWER          LEVEL          UPPER
+
+---- EQU distanceC         -INF           35.0000        35.0000      
+---- EQU obj1              98.7614        98.7614        98.7614      
+
+---- VAR miuLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1     -10000.0000         0.8753     10000.0000      
+LH1.2     -10000.0000         1.1622     10000.0000      
+LH1.3     -10000.0000         2.0159     10000.0000      
+LH1.4     -10000.0000         2.6035     10000.0000      
+LH1.5     -10000.0000         4.0869     10000.0000      
+LH1.6     -10000.0000         4.2469     10000.0000      
+LH1.7     -10000.0000         6.3932     10000.0000      
+LH1.8     -10000.0000         6.1506     10000.0000      
+LH1.9     -10000.0000         6.9431     10000.0000      
+LH1.10    -10000.0000         6.7216     10000.0000      
+LH2.1     -10000.0000         2.0428     10000.0000      
+LH2.2     -10000.0000         3.9892     10000.0000      
+LH2.3     -10000.0000         6.1887     10000.0000      
+LH2.4     -10000.0000         9.7198     10000.0000      
+LH2.5     -10000.0000        10.9740     10000.0000      
+LH2.6     -10000.0000        13.0156     10000.0000      
+LH2.7     -10000.0000        15.8040     10000.0000      
+LH2.8     -10000.0000        16.6464     10000.0000      
+LH2.9     -10000.0000        20.8888     10000.0000      
+LH2.10    -10000.0000        23.1846     10000.0000      
+LH3.1     -10000.0000         4.7272     10000.0000      
+LH3.2     -10000.0000         8.3675     10000.0000      
+LH3.3     -10000.0000        12.0807     10000.0000      
+LH3.4     -10000.0000        17.5266     10000.0000      
+LH3.5     -10000.0000        20.7792     10000.0000      
+LH3.6     -10000.0000        25.2756     10000.0000      
+LH3.7     -10000.0000        29.4502     10000.0000      
+LH3.8     -10000.0000        33.1625     10000.0000      
+LH3.9     -10000.0000        38.9606     10000.0000      
+LH3.10    -10000.0000        42.4541     10000.0000      
+
+---- VAR alphaLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1           .             2.6419     10000.0000      
+LH1.2           .             3.0831     10000.0000      
+LH1.3           .             3.3169     10000.0000      
+LH1.4           .             6.4434     10000.0000      
+LH1.5           .            10.2336     10000.0000      
+LH1.6           .            12.1100     10000.0000      
+LH1.7           .            12.8990     10000.0000      
+LH1.8           .            19.1304     10000.0000      
+LH1.9           .            12.7537     10000.0000      
+LH1.10          .            16.1493     10000.0000      
+LH2.1           .             1.8137     10000.0000      
+LH2.2           .             1.4559     10000.0000      
+LH2.3           .             3.6685     10000.0000      
+LH2.4           .             6.5803     10000.0000      
+LH2.5           .            12.5957     10000.0000      
+LH2.6           .            13.2855     10000.0000      
+LH2.7           .            23.4136     10000.0000      
+LH2.8           .            25.6913     10000.0000      
+LH2.9           .            16.2803     10000.0000      
+LH2.10          .             8.9534     10000.0000      
+LH3.1           .             1.1421     10000.0000      
+LH3.2           .             5.4064     10000.0000      
+LH3.3           .             2.2002     10000.0000      
+LH3.4           .             5.5438     10000.0000      
+LH3.5           .             3.2108     10000.0000      
+LH3.6           .            17.2771     10000.0000      
+LH3.7           .            15.7418     10000.0000      
+LH3.8           .             4.6886     10000.0000      
+LH3.9           .            21.7611     10000.0000      
+LH3.10          .            13.6669     10000.0000      
+
+---- VAR pi  
+
+               LOWER          LEVEL          UPPER
+
+UH1.LH1          .             0.6600         1.0000      
+UH1.LH2          .              .             1.0000      
+UH1.LH3          .              .             1.0000      
+UH2.LH1          .              .             1.0000      
+UH2.LH2          .             0.0200         1.0000      
+UH2.LH3          .             0.1600         1.0000      
+UH3.LH1          .              .             1.0000      
+UH3.LH2          .             0.1600         1.0000      
+UH3.LH3          .       1.496837E-18         1.0000      
+
+                           LOWER          LEVEL          UPPER
+
+---- VAR z                 -INF          869.8158        +INF         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 14
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    212 Objective Value =
+            VARIABLE z.L                   =      869.816  
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 15
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE mymodel Using NLP From line 205
+
+
+---- ec1  =E=  
+
+ec1(UH1)..  pi(UH1,LH1) + pi(UH1,LH2) + pi(UH1,LH3) =E= 0.66 ; (LHS = 0.66)
+     
+ec1(UH2)..  pi(UH2,LH1) + pi(UH2,LH2) + pi(UH2,LH3) =E= 0.18 ; (LHS = 0.18)
+     
+ec1(UH3)..  pi(UH3,LH1) + pi(UH3,LH2) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- ec2  =E=  
+
+ec2(LH1)..  pi(UH1,LH1) + pi(UH2,LH1) + pi(UH3,LH1) =E= 0.66 ; (LHS = 0.66)
+     
+ec2(LH2)..  pi(UH1,LH2) + pi(UH2,LH2) + pi(UH3,LH2) =E= 0.18 ; (LHS = 0.18)
+     
+ec2(LH3)..  pi(UH1,LH3) + pi(UH2,LH3) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- distanceC  =L=  
+
+distanceC..  - (4.63002601375884E-6)*miuLH(LH1,1) - (1.41318652460143E-7)*miuLH(LH1,2) - (8.1249144240303E-6)*miuLH(LH1,3) - (2.7011320612651E-5)*miuLH(LH1,4) + (5.32730887030653E-7)*miuLH(LH1,5) - (3.28944932189046E-5)*miuLH(LH1,6) + (1.15395617924108E-5)*miuLH(LH1,7) - (1.68708865159672E-5)*miuLH(LH1,8) + (1.74911073443695E-5)*miuLH(LH1,9) - (1.60125114378573E-5)*miuLH(LH1,10) - (0.12482262236248)*miuLH(LH2,1) - (0.302300148430459)*miuLH(LH2,2) - (0.446202971816751)*miuLH(LH2,3) - (0.760920105800124)*miuLH(LH2,4) - (0.736440881888786)*miuLH(LH2,5) - (0.937634375247288)*miuLH(LH2,6) - (1.00627159578289)*miuLH(LH2,7) - (1.12228910348276)*miuLH(LH2,8) - (1.49120753529368)*miuLH(LH2,9) - (1.7603810160203)*miuLH(LH2,10) - (1.23260736)*miuLH(LH3,1) - (2.30571808)*miuLH(LH3,2) - (3.22075104)*miuLH(LH3,3) - (4.77539168)*miuLH(LH3,4) - (5.34154432)*miuLH(LH3,5) - (6.7291712)*miuLH(LH3,6) - (7.37824352)*miuLH(LH3,7) - (8.643824)*miuLH(LH3,8) - (10.24561696)*miuLH(LH3,9) - (11.43440352)*miuLH(LH3,10) - (1.93661293776071E-6)*alphaLH(LH1,1) - (2.81358279301536E-7)*alphaLH(LH1,2) + (3.28571497304031E-6)*alphaLH(LH1,3) - (9.14256092400478E-6)*alphaLH(LH1,4) + (3.83963798868958E-6)*alphaLH(LH1,5) + (6.41808171475411E-7)*alphaLH(LH1,6) - (1.37805514243805E-6)*alphaLH(LH1,7) + (5.31090271114199E-7)*alphaLH(LH1,8) - (6.71070684141739E-7)*alphaLH(LH1,9) - (3.57439982412444E-7)*alphaLH(LH1,10) + (0.0110655299365746)*alphaLH(LH2,1) + (0.0243426612654593)*alphaLH(LH2,2) - (0.00262895094735229)*alphaLH(LH2,3) - (0.000563706518929322)*alphaLH(LH2,4) - (0.00527438875279354)*alphaLH(LH2,5) - (0.00242053201453507)*alphaLH(LH2,6) - (0.0137815446136235)*alphaLH(LH2,7) - (0.00732854584154355)*alphaLH(LH2,8) - (0.00614089735634821)*alphaLH(LH2,9) + (0.0183406235042716)*alphaLH(LH2,10) + (0.0548039004213542)*alphaLH(LH3,1) - (0.0518740576340832)*alphaLH(LH3,2) + (0.0296847791340767)*alphaLH(LH3,3) + (0.0115908703913139)*alphaLH(LH3,4) + (0.0703763833611533)*alphaLH(LH3,5) - (0.0311094445655496)*alphaLH(LH3,6) - (0.0167532302189591)*alphaLH(LH3,7) + (0.0807905536062862)*alphaLH(LH3,8) - (0.0489969325266004)*alphaLH(LH3,9) + (0.0128109466873091)*alphaLH(LH3,10) + (3.43888473253173E-9)*pi(UH1,LH1) + (869.815823771819)*pi(UH1,LH2) + (0)*pi(UH1,LH3) + (4684.34044907967)*pi(UH2,LH1) + (1540.38476970346)*pi(UH2,LH2) + (4684.33828125973)*pi(UH2,LH3) + (1193.05447510957)*pi(UH3,LH1) + (26.2019055486805)*pi(UH3,LH2) + (1193.05341572595)*pi(UH3,LH3) =L= 35 ; (LHS = 784.494125285685, INFES = 749.494125285685 ****)
+     
+
+---- obj1  =E=  
+
+obj1..  (0)*miuLH(LH3,1) + (0)*miuLH(LH3,2) + (0)*miuLH(LH3,3) + (0)*miuLH(LH3,4) + (0)*miuLH(LH3,5) + (0)*miuLH(LH3,6) + (0)*miuLH(LH3,7) + (0)*miuLH(LH3,8) + (0)*miuLH(LH3,9) + (0)*miuLH(LH3,10) + (0)*alphaLH(LH3,1) - (1.11022302462516E-16)*alphaLH(LH3,2) - (1.11022302462516E-16)*alphaLH(LH3,3) - (1.11022302462516E-16)*alphaLH(LH3,4) + (0)*alphaLH(LH3,5) + (0)*alphaLH(LH3,6) + (0)*alphaLH(LH3,7) + (0)*alphaLH(LH3,8) + (0)*alphaLH(LH3,9) + (0)*alphaLH(LH3,10) + z =E= 98.761402 ; (LHS = 968.577225771819, INFES = 869.815823771819 ****)
+     
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 16
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE mymodel Using NLP From line 205
+
+
+---- miuLH  
+
+miuLH(LH1,1)
+                (.LO, .L, .UP, .M = -10000, 0.875325492404535, 10000, NA)
+ (-4.630026E-6) distanceC
+
+miuLH(LH1,2)
+                (.LO, .L, .UP, .M = -10000, 1.16216089294041, 10000, NA)
+ (-1.413187E-7) distanceC
+
+miuLH(LH1,3)
+                (.LO, .L, .UP, .M = -10000, 2.0158808447618, 10000, NA)
+ (-8.124914E-6) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- alphaLH  
+
+alphaLH(LH1,1)
+                (.LO, .L, .UP, .M = 0, 2.64190949586783, 10000, NA)
+ (-1.936613E-6) distanceC
+
+alphaLH(LH1,2)
+                (.LO, .L, .UP, .M = 0, 3.08309837134716, 10000, NA)
+ (-2.813583E-7) distanceC
+
+alphaLH(LH1,3)
+                (.LO, .L, .UP, .M = 0, 3.31685302486824, 10000, NA)
+ (3.2857150E-6) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- pi  
+
+pi(UH1,LH1)
+                (.LO, .L, .UP, .M = 0, 0.66, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH1)
+ (3.4388847E-9) distanceC
+
+pi(UH1,LH2)
+                (.LO, .L, .UP, .M = 0, 0, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH2)
+     (869.8158) distanceC
+
+pi(UH1,LH3)
+                (.LO, .L, .UP, .M = 0, 0, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH3)
+       (0)      distanceC
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 869.815823771819, +INF, 0)
+        1       obj1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 17
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE mymodel Using NLP From line 205
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.600E-01, 9.876E+01]
+Bound     [min, max] : [ 1.000E+00, 1.000E+04] - Zero values observed as well
+Matrix    [min, max] : [ 1.110E-16, 4.684E+03] - Zero values observed as well
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 18
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mymodel Using NLP From line 205
+
+
+LOOPS                           *            UH1
+                                *            LH3
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES           70
+NON ZERO ELEMENTS           108     NON LINEAR N-Z             89
+CODE LENGTH                 932     CONSTANT POOL              79
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  47.6.0 c2de9d6d WEX-WEI
+               L O O P S         *          UH1
+                                 *          LH3
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 19
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mymodel Using NLP From line 205
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mymodel             OBJECTIVE  z
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  BARON               FROM LINE  205
+
+**** SOLVER STATUS     3 Resource Interrupt
+**** MODEL STATUS      2 Locally Optimal
+**** OBJECTIVE VALUE              390.0785
+
+ RESOURCE USAGE, LIMIT         40.690        30.000
+ ITERATION COUNT, LIMIT         0    2147483647
+ EVALUATION ERRORS              0             0
+
+GAMS/BARON       47.6.0 c2de9d6d Sep 12, 2024          WEI x86 64bit/MS Window
+
+BARON is a product of The Optimization Firm, LLC. http://www.minlp.com/
+Parts of the BARON software were created at the
+University of Illinois at Urbana-Champaign.
+
+
+===========================================================================
+ BARON version 24.5.8. Built: WIN-64 Wed May 8 10:05:37 EDT 2024 
+ Running on machine ZHONGYU_CAMPUS
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC, ILOG CPLEX                             
+
+Solution      = 390.078531583296  found at node 182
+Best possible = -2.34535946219694E-9
+Absolute gap  = 390.078531585642  optca = 0.1
+Relative gap  = NA  optcr = 0.01
+
+
+---- EQU ec1  
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+UH1         0.6600         0.6600         0.6600          .          
+UH2         0.1800         0.1800         0.1800     28121.8490      
+UH3         0.1600         0.1600         0.1600      9957.3070      
+
+---- EQU ec2  
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+LH1         0.6600         0.6600         0.6600          .          
+LH2         0.1800         0.1800         0.1800    -28121.8490      
+LH3         0.1600         0.1600         0.1600     -8131.6043      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU distanceC         -INF           35.0000        35.0000        -8.3461      
+---- EQU obj1              98.7614        98.7614        98.7614         1.0000      
+
+---- VAR miuLH  
+
+              LOWER          LEVEL          UPPER         MARGINAL
+
+LH1.1     -10000.0000         0.8753     10000.0000          .          
+LH1.2     -10000.0000         1.1622     10000.0000          .          
+LH1.3     -10000.0000         2.0159     10000.0000          .          
+LH1.4     -10000.0000         2.6035     10000.0000          .          
+LH1.5     -10000.0000         4.0869     10000.0000          .          
+LH1.6     -10000.0000         4.2469     10000.0000          .          
+LH1.7     -10000.0000         6.3932     10000.0000          .          
+LH1.8     -10000.0000         6.1506     10000.0000          .          
+LH1.9     -10000.0000         6.9430     10000.0000          .          
+LH1.10    -10000.0000         6.7216     10000.0000          .          
+LH2.1     -10000.0000         4.7272     10000.0000          .          
+LH2.2     -10000.0000         8.3675     10000.0000          .          
+LH2.3     -10000.0000        12.0807     10000.0000          .          
+LH2.4     -10000.0000        17.5266     10000.0000          .          
+LH2.5     -10000.0000        20.7792     10000.0000          .          
+LH2.6     -10000.0000        25.2755     10000.0000          .          
+LH2.7     -10000.0000        29.4502     10000.0000          .          
+LH2.8     -10000.0000        33.1625     10000.0000          .          
+LH2.9     -10000.0000        38.9606     10000.0000          .          
+LH2.10    -10000.0000        42.4541     10000.0000          .          
+LH3.1     -10000.0000         1.5741     10000.0000          .          
+LH3.2     -10000.0000         3.0059     10000.0000          .          
+LH3.3     -10000.0000         4.7781     10000.0000          .          
+LH3.4     -10000.0000         7.4743     10000.0000          .          
+LH3.5     -10000.0000         8.6401     10000.0000          .          
+LH3.6     -10000.0000        10.0600     10000.0000          .          
+LH3.7     -10000.0000        12.5970     10000.0000          .          
+LH3.8     -10000.0000        12.9770     10000.0000          .          
+LH3.9     -10000.0000        16.2902     10000.0000          .          
+LH3.10    -10000.0000        17.9035     10000.0000          .          
+
+---- VAR alphaLH  
+
+              LOWER          LEVEL          UPPER         MARGINAL
+
+LH1.1           .             2.6419     10000.0000          .          
+LH1.2           .             3.0831     10000.0000          .          
+LH1.3           .             3.3168     10000.0000          .          
+LH1.4           .             6.4435     10000.0000          .          
+LH1.5           .            10.2335     10000.0000          .          
+LH1.6           .            12.1100     10000.0000          .          
+LH1.7           .            12.8991     10000.0000          .          
+LH1.8           .            19.1304     10000.0000          .          
+LH1.9           .            12.7538     10000.0000          .          
+LH1.10          .            16.1493     10000.0000          .          
+LH2.1           .             1.1420     10000.0000          .          
+LH2.2           .             5.4063     10000.0000          .          
+LH2.3           .             2.2003     10000.0000          .          
+LH2.4           .             5.5438     10000.0000          .          
+LH2.5           .             3.2109     10000.0000          .          
+LH2.6           .            17.2769     10000.0000          .          
+LH2.7           .            15.7418     10000.0000          .          
+LH2.8           .             4.6885     10000.0000          .          
+LH2.9           .            21.7610     10000.0000          .          
+LH2.10          .            13.6668     10000.0000          .          
+LH3.1           .             2.0526     10000.0000          .          
+LH3.2           .             1.5797     10000.0000          .          
+LH3.3           .             3.7014     10000.0000          .          
+LH3.4           .             6.6253     10000.0000          .          
+LH3.5           .            12.8999     10000.0000          .          
+LH3.6           .            12.7395     10000.0000          .          
+LH3.7           .            21.2087     10000.0000          .          
+LH3.8           .            26.1264     10000.0000          .          
+LH3.9           .            15.0535     10000.0000          .          
+LH3.10          .            10.1457     10000.0000          .          
+
+---- VAR pi  
+
+               LOWER          LEVEL          UPPER         MARGINAL
+
+UH1.LH1          .             0.6600         1.0000          .          
+UH1.LH2          .              .             1.0000     67217.6631      
+UH1.LH3          .              .             1.0000     11387.2269      
+UH2.LH1          .              .             1.0000     10973.9651      
+UH2.LH2          .             0.1800         1.0000          .          
+UH2.LH3          .              .             1.0000          .          
+UH3.LH1          .              .             1.0000          .          
+UH3.LH2          .              .             1.0000     28111.1701      
+UH3.LH3          .             0.1600         1.0000          .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR z                 -INF          390.0785        +INF             .          
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 20
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    212 Objective Value =
+            VARIABLE z.L                   =      390.079  
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 21
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE mymodel Using NLP From line 205
+
+
+---- ec1  =E=  
+
+ec1(UH1)..  pi(UH1,LH1) + pi(UH1,LH2) + pi(UH1,LH3) =E= 0.66 ; (LHS = 0.66)
+     
+ec1(UH2)..  pi(UH2,LH1) + pi(UH2,LH2) + pi(UH2,LH3) =E= 0.18 ; (LHS = 0.18)
+     
+ec1(UH3)..  pi(UH3,LH1) + pi(UH3,LH2) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- ec2  =E=  
+
+ec2(LH1)..  pi(UH1,LH1) + pi(UH2,LH1) + pi(UH3,LH1) =E= 0.66 ; (LHS = 0.66)
+     
+ec2(LH2)..  pi(UH1,LH2) + pi(UH2,LH2) + pi(UH3,LH2) =E= 0.18 ; (LHS = 0.18)
+     
+ec2(LH3)..  pi(UH1,LH3) + pi(UH2,LH3) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- distanceC  =L=  
+
+distanceC..  (5.08450536)*miuLH(LH1,1) + (9.51108708)*miuLH(LH1,2) + (13.28559804)*miuLH(LH1,3) + (19.69849068)*miuLH(LH1,4) + (22.03387032)*miuLH(LH1,5) + (27.7578312)*miuLH(LH1,6) + (30.43525452)*miuLH(LH1,7) + (35.655774)*miuLH(LH1,8) + (42.26316996)*miuLH(LH1,9) + (47.16691452)*miuLH(LH1,10) + (3.92255827819099E-11)*miuLH(LH2,1) + (1.02388497680295E-11)*miuLH(LH2,2) + (6.12936901234207E-11)*miuLH(LH2,3) - (3.24540394558426E-11)*miuLH(LH2,4) - (3.65518815215182E-11)*miuLH(LH2,5) + (2.05250216822606E-11)*miuLH(LH2,6) + (2.11926476367807E-11)*miuLH(LH2,7) - (1.76524395101296E-11)*miuLH(LH2,8) - (1.58900093083503E-11)*miuLH(LH2,9) + (3.32227045873878E-11)*miuLH(LH2,10) - (0.167439320171662)*miuLH(LH3,1) - (0.441826882256312)*miuLH(LH3,2) - (0.661918458312502)*miuLH(LH3,3) - (1.16720735566745)*miuLH(LH3,4) - (1.09109029001015)*miuLH(LH3,5) - (1.39302060891119)*miuLH(LH3,6) - (1.48664101649163)*miuLH(LH3,7) - (1.63584624996296)*miuLH(LH3,8) - (2.23989392429791)*miuLH(LH3,9) - (2.67955419592873)*miuLH(LH3,10) - (0.343839499971691)*alphaLH(LH1,1) + (0.161590703556656)*alphaLH(LH1,2) - (0.150342792640072)*alphaLH(LH1,3) - (0.0515465219588446)*alphaLH(LH1,4) - (0.51826086427122)*alphaLH(LH1,5) + (0.107437041952264)*alphaLH(LH1,6) + (0.0625568875364573)*alphaLH(LH1,7) - (0.673174322101822)*alphaLH(LH1,8) + (0.154729426296438)*alphaLH(LH1,9) - (0.0574446578962741)*alphaLH(LH1,10) + (5.16954479223841E-12)*alphaLH(LH2,1) + (3.8786773792765E-12)*alphaLH(LH2,2) - (8.35751468031276E-12)*alphaLH(LH2,3) + (4.81970463539483E-12)*alphaLH(LH2,4) + (3.57785800986221E-11)*alphaLH(LH2,5) - (1.1731455806796E-11)*alphaLH(LH2,6) - (6.18097573124032E-12)*alphaLH(LH2,7) + (1.0036531605806E-11)*alphaLH(LH2,8) - (1.15227827279796E-13)*alphaLH(LH2,9) - (8.29136759250559E-13)*alphaLH(LH2,10) + (0.0161175876868371)*alphaLH(LH3,1) + (0.0475691964367948)*alphaLH(LH3,2) - (0.00639573124600123)*alphaLH(LH3,3) - (0.00165493679299001)*alphaLH(LH3,4) - (0.0130989953871155)*alphaLH(LH3,5) - (0.00299777053395101)*alphaLH(LH3,6) - (0.0263751814973915)*alphaLH(LH3,7) - (0.0172894872497612)*alphaLH(LH3,8) - (0.00953124286554672)*alphaLH(LH3,9) + (0.0313490689878899)*alphaLH(LH3,10) + (4684.33828125973)*pi(UH1,LH1) + (4684.33828126261)*pi(UH1,LH2) + (390.078531583296)*pi(UH1,LH3) + (0)*pi(UH2,LH1) + (0)*pi(UH2,LH2) + (2395.16865642779)*pi(UH2,LH3) + (1191.77390353288)*pi(UH3,LH1) + (1191.77390353322)*pi(UH3,LH2) + (218.750000042553)*pi(UH3,LH3) =L= 35 ; (LHS = 3126.66326563823, INFES = 3091.66326563823 ****)
+     
+
+---- obj1  =E=  
+
+obj1..  (0)*miuLH(LH1,1) + (0)*miuLH(LH1,2) + (0)*miuLH(LH1,3) + (0)*miuLH(LH1,4) + (0)*miuLH(LH1,5) + (0)*miuLH(LH1,6) + (0)*miuLH(LH1,7) + (0)*miuLH(LH1,8) + (0)*miuLH(LH1,9) + (0)*miuLH(LH1,10) + (0)*alphaLH(LH1,1) + (0)*alphaLH(LH1,2) + (0)*alphaLH(LH1,3) + (0)*alphaLH(LH1,4) + (0)*alphaLH(LH1,5) + (0)*alphaLH(LH1,6) + (0)*alphaLH(LH1,7) + (0)*alphaLH(LH1,8) + (0)*alphaLH(LH1,9) + (0)*alphaLH(LH1,10) + z =E= 90.638306 ; (LHS = 480.716837583296, INFES = 390.078531583296 ****)
+     
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 22
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE mymodel Using NLP From line 205
+
+
+---- miuLH  
+
+miuLH(LH1,1)
+                (.LO, .L, .UP, .M = -10000, 4.727227, 10000, 0)
+       (5.0845) distanceC
+       (0)      obj1
+
+miuLH(LH1,2)
+                (.LO, .L, .UP, .M = -10000, 8.36753, 10000, 0)
+       (9.5111) distanceC
+       (0)      obj1
+
+miuLH(LH1,3)
+                (.LO, .L, .UP, .M = -10000, 12.080734, 10000, 0)
+      (13.2856) distanceC
+       (0)      obj1
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- alphaLH  
+
+alphaLH(LH1,1)
+                (.LO, .L, .UP, .M = 0, 1.142036, 10000, 0)
+      (-0.3438) distanceC
+       (0)      obj1
+
+alphaLH(LH1,2)
+                (.LO, .L, .UP, .M = 0, 5.40634, 10000, 0)
+       (0.1616) distanceC
+       (0)      obj1
+
+alphaLH(LH1,3)
+                (.LO, .L, .UP, .M = 0, 2.200251, 10000, 0)
+      (-0.1503) distanceC
+       (0)      obj1
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- pi  
+
+pi(UH1,LH1)
+                (.LO, .L, .UP, .M = 0, 0.66, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH1)
+    (4684.3383) distanceC
+
+pi(UH1,LH2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 67217.6631361337)
+        1       ec1(UH1)
+        1       ec2(LH2)
+    (4684.3383) distanceC
+
+pi(UH1,LH3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 11387.2269269255)
+        1       ec1(UH1)
+        1       ec2(LH3)
+     (390.0785) distanceC
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 390.078531583296, +INF, 0)
+        1       obj1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 23
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE mymodel Using NLP From line 205
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.600E-01, 9.064E+01]
+Bound     [min, max] : [ 1.000E+00, 1.000E+04] - Zero values observed as well
+Matrix    [min, max] : [ 1.152E-13, 4.684E+03] - Zero values observed as well
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 24
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mymodel Using NLP From line 205
+
+
+LOOPS                           *            UH2
+                                *            LH1
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES           70
+NON ZERO ELEMENTS           108     NON LINEAR N-Z             89
+CODE LENGTH                 932     CONSTANT POOL              79
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  47.6.0 c2de9d6d WEX-WEI
+               L O O P S         *          UH2
+                                 *          LH1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 25
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mymodel Using NLP From line 205
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mymodel             OBJECTIVE  z
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  BARON               FROM LINE  205
+
+**** SOLVER STATUS     3 Resource Interrupt
+**** MODEL STATUS      2 Locally Optimal
+**** OBJECTIVE VALUE             3740.5499
+
+ RESOURCE USAGE, LIMIT         40.990        30.000
+ ITERATION COUNT, LIMIT         0    2147483647
+ EVALUATION ERRORS              0             0
+
+GAMS/BARON       47.6.0 c2de9d6d Sep 12, 2024          WEI x86 64bit/MS Window
+
+BARON is a product of The Optimization Firm, LLC. http://www.minlp.com/
+Parts of the BARON software were created at the
+University of Illinois at Urbana-Champaign.
+
+
+===========================================================================
+ BARON version 24.5.8. Built: WIN-64 Wed May 8 10:05:37 EDT 2024 
+ Running on machine ZHONGYU_CAMPUS
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC, ILOG CPLEX                             
+
+Solution      = 3740.54987133642  found at node 1
+Best possible = -2.52466634265147E-8
+Absolute gap  = 3740.54987136167  optca = 0.1
+Relative gap  = NA  optcr = 0.01
+
+
+---- EQU ec1  
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+UH1         0.6600         0.6600         0.6600       674.8167      
+UH2         0.1800         0.1800         0.1800    -29672.3860      
+UH3         0.1600         0.1600         0.1600    -14506.9256      
+
+---- EQU ec2  
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+LH1         0.6600         0.6600         0.6600          .          
+LH2         0.1800         0.1800         0.1800     29672.3860      
+LH3         0.1600         0.1600         0.1600     14506.9256      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU distanceC         -INF           35.0000        35.0000       -12.7251      
+---- EQU obj1              90.6383        90.6383        90.6383         1.0000      
+
+---- VAR miuLH  
+
+              LOWER          LEVEL          UPPER         MARGINAL
+
+LH1.1     -10000.0000         1.2852     10000.0000          .          
+LH1.2     -10000.0000         1.9288     10000.0000          .          
+LH1.3     -10000.0000         3.0868     10000.0000          .          
+LH1.4     -10000.0000         4.1913     10000.0000          .          
+LH1.5     -10000.0000         5.8630     10000.0000          .          
+LH1.6     -10000.0000         6.4843     10000.0000          .          
+LH1.7     -10000.0000         8.8465     10000.0000          .          
+LH1.8     -10000.0000         9.0246     10000.0000          .          
+LH1.9     -10000.0000        10.3497     10000.0000          .          
+LH1.10    -10000.0000        10.5235     10000.0000          .          
+LH2.1     -10000.0000         4.7272     10000.0000          .          
+LH2.2     -10000.0000         8.3675     10000.0000          .          
+LH2.3     -10000.0000        12.0807     10000.0000          .          
+LH2.4     -10000.0000        17.5266     10000.0000          .          
+LH2.5     -10000.0000        20.7792     10000.0000          .          
+LH2.6     -10000.0000        25.2755     10000.0000          .          
+LH2.7     -10000.0000        29.4502     10000.0000          .          
+LH2.8     -10000.0000        33.1625     10000.0000          .          
+LH2.9     -10000.0000        38.9606     10000.0000          .          
+LH2.10    -10000.0000        42.4541     10000.0000          .          
+LH3.1     -10000.0000         2.0973     10000.0000          .          
+LH3.2     -10000.0000         4.3866     10000.0000          .          
+LH3.3     -10000.0000         6.8466     10000.0000          .          
+LH3.4     -10000.0000        11.1218     10000.0000          .          
+LH3.5     -10000.0000        12.0497     10000.0000          .          
+LH3.6     -10000.0000        14.4132     10000.0000          .          
+LH3.7     -10000.0000        17.2428     10000.0000          .          
+LH3.8     -10000.0000        18.0891     10000.0000          .          
+LH3.9     -10000.0000        23.2899     10000.0000          .          
+LH3.10    -10000.0000        26.2771     10000.0000          .          
+
+---- VAR alphaLH  
+
+              LOWER          LEVEL          UPPER         MARGINAL
+
+LH1.1           .             2.4529     10000.0000          .          
+LH1.2           .             3.2995     10000.0000          .          
+LH1.3           .             3.1872     10000.0000          .          
+LH1.4           .             6.3446     10000.0000          .          
+LH1.5           .             9.2980     10000.0000          .          
+LH1.6           .            12.6162     10000.0000          .          
+LH1.7           .            13.1881     10000.0000          .          
+LH1.8           .            17.1300     10000.0000          .          
+LH1.9           .            13.5984     10000.0000          .          
+LH1.10          .            15.8754     10000.0000          .          
+LH2.1           .             1.1420     10000.0000          .          
+LH2.2           .             5.4063     10000.0000          .          
+LH2.3           .             2.2003     10000.0000          .          
+LH2.4           .             5.5438     10000.0000          .          
+LH2.5           .             3.2109     10000.0000          .          
+LH2.6           .            17.2769     10000.0000          .          
+LH2.7           .            15.7418     10000.0000          .          
+LH2.8           .             4.6885     10000.0000          .          
+LH2.9           .            21.7610     10000.0000          .          
+LH2.10          .            13.6668     10000.0000          .          
+LH3.1           .             1.6599     10000.0000          .          
+LH3.2           .             0.7800     10000.0000          .          
+LH3.3           .             4.0033     10000.0000          .          
+LH3.4           .             6.7631     10000.0000          .          
+LH3.5           .            15.0985     10000.0000          .          
+LH3.6           .            13.2213     10000.0000          .          
+LH3.7           .            28.7773     10000.0000          .          
+LH3.8           .            32.0779     10000.0000          .          
+LH3.9           .            16.9004     10000.0000          .          
+LH3.10          .             6.5595     10000.0000          .          
+
+---- VAR pi  
+
+               LOWER          LEVEL          UPPER         MARGINAL
+
+UH1.LH1          .             0.6600         1.0000          .          
+UH1.LH2          .              .             1.0000     29261.5422      
+UH1.LH3          .              .             1.0000          .          
+UH2.LH1          .              .             1.0000     77271.3144      
+UH2.LH2          .             0.1800         1.0000          .          
+UH2.LH3          .              .             1.0000     30330.9208      
+UH3.LH1          .              .             1.0000     24019.4357      
+UH3.LH2          .              .             1.0000          .          
+UH3.LH3          .             0.1600         1.0000          .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR z                 -INF         3740.5499        +INF             .          
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 26
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    212 Objective Value =
+            VARIABLE z.L                   =     3740.550  
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 27
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE mymodel Using NLP From line 205
+
+
+---- ec1  =E=  
+
+ec1(UH1)..  pi(UH1,LH1) + pi(UH1,LH2) + pi(UH1,LH3) =E= 0.66 ; (LHS = 0.66)
+     
+ec1(UH2)..  pi(UH2,LH1) + pi(UH2,LH2) + pi(UH2,LH3) =E= 0.18 ; (LHS = 0.18)
+     
+ec1(UH3)..  pi(UH3,LH1) + pi(UH3,LH2) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- ec2  =E=  
+
+ec2(LH1)..  pi(UH1,LH1) + pi(UH2,LH1) + pi(UH3,LH1) =E= 0.66 ; (LHS = 0.66)
+     
+ec2(LH2)..  pi(UH1,LH2) + pi(UH2,LH2) + pi(UH3,LH2) =E= 0.18 ; (LHS = 0.18)
+     
+ec2(LH3)..  pi(UH1,LH3) + pi(UH2,LH3) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- distanceC  =L=  
+
+distanceC..  (0.540986772904577)*miuLH(LH1,1) + (1.01197106523884)*miuLH(LH1,2) + (1.41357561835292)*miuLH(LH1,3) + (2.09590159634132)*miuLH(LH1,4) + (2.34438387859112)*miuLH(LH1,5) + (2.95340814048156)*miuLH(LH1,6) + (3.23828356080174)*miuLH(LH1,7) + (3.79374211312022)*miuLH(LH1,8) + (4.49676306836682)*miuLH(LH1,9) + (5.01851705523262)*miuLH(LH1,10) + (0)*miuLH(LH2,1) + (0)*miuLH(LH2,2) + (0)*miuLH(LH2,3) + (0)*miuLH(LH2,4) + (0)*miuLH(LH2,5) + (0)*miuLH(LH2,6) + (0)*miuLH(LH2,7) + (0)*miuLH(LH2,8) + (0)*miuLH(LH2,9) + (0)*miuLH(LH2,10) - (2.81422956049937E-10)*miuLH(LH3,1) - (1.51365782130597E-10)*miuLH(LH3,2) - (8.09336597740184E-11)*miuLH(LH3,3) + (4.21782146986516E-10)*miuLH(LH3,4) - (1.53726773532981E-10)*miuLH(LH3,5) - (1.39751250571862E-10)*miuLH(LH3,6) - (2.72052602667827E-10)*miuLH(LH3,7) - (6.27239842287963E-10)*miuLH(LH3,8) + (1.34031097331899E-10)*miuLH(LH3,9) + (6.73820750307641E-10)*miuLH(LH3,10) - (0.0249629856009734)*alphaLH(LH1,1) + (0.0220081387112649)*alphaLH(LH1,2) - (0.0132909040888057)*alphaLH(LH1,3) - (0.00512670572846925)*alphaLH(LH1,4) - (0.0324044574748528)*alphaLH(LH1,5) + (0.0133770794580261)*alphaLH(LH1,6) + (0.00727191524054338)*alphaLH(LH1,7) - (0.037471858060958)*alphaLH(LH1,8) + (0.0208260038478692)*alphaLH(LH1,9) - (0.00567098901612495)*alphaLH(LH1,10) + (0)*alphaLH(LH2,1) + (0)*alphaLH(LH2,2) + (0)*alphaLH(LH2,3) + (0)*alphaLH(LH2,4) + (0)*alphaLH(LH2,5) + (0)*alphaLH(LH2,6) + (0)*alphaLH(LH2,7) + (0)*alphaLH(LH2,8) + (0)*alphaLH(LH2,9) + (0)*alphaLH(LH2,10) + (2.32268781985567E-11)*alphaLH(LH3,1) + (1.6492071708285E-10)*alphaLH(LH3,2) + (4.49013448644564E-11)*alphaLH(LH3,3) + (1.79150383416982E-11)*alphaLH(LH3,4) + (7.41829175865405E-11)*alphaLH(LH3,5) - (6.92910617772213E-12)*alphaLH(LH3,6) + (6.04279115634654E-11)*alphaLH(LH3,7) + (8.57110116214699E-11)*alphaLH(LH3,8) + (2.05574224310112E-12)*alphaLH(LH3,9) - (9.49750145196049E-11)*alphaLH(LH3,10) + (53.0303049586619)*pi(UH1,LH1) + (4684.33828125973)*pi(UH1,LH2) + (1193.05341577548)*pi(UH1,LH3) + (3740.54987133642)*pi(UH2,LH1) + (0)*pi(UH2,LH2) + (1191.77390357967)*pi(UH2,LH3) + (747.538224308946)*pi(UH3,LH1) + (1191.77390353288)*pi(UH3,LH2) - (5.6843418860808E-14)*pi(UH3,LH3) =L= 35 ; (LHS = 35.0000012727169, INFES = 1.2727168510196E-6 ****)
+     
+
+---- obj1  =E=  
+
+obj1..  (0)*miuLH(LH2,1) + (0)*miuLH(LH2,2) + (0)*miuLH(LH2,3) + (0)*miuLH(LH2,4) + (0)*miuLH(LH2,5) + (0)*miuLH(LH2,6) + (0)*miuLH(LH2,7) + (0)*miuLH(LH2,8) + (0)*miuLH(LH2,9) + (0)*miuLH(LH2,10) + (0)*alphaLH(LH2,1) + (0)*alphaLH(LH2,2) + (0)*alphaLH(LH2,3) + (0)*alphaLH(LH2,4) + (0)*alphaLH(LH2,5) + (0)*alphaLH(LH2,6) + (0)*alphaLH(LH2,7) + (0)*alphaLH(LH2,8) + (0)*alphaLH(LH2,9) + (0)*alphaLH(LH2,10) + z =E= 90.638306 ; (LHS = 3831.18817733642, INFES = 3740.54987133642 ****)
+     
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 28
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE mymodel Using NLP From line 205
+
+
+---- miuLH  
+
+miuLH(LH1,1)
+                (.LO, .L, .UP, .M = -10000, 1.28516746432165, 10000, 0)
+       (0.541)  distanceC
+
+miuLH(LH1,2)
+                (.LO, .L, .UP, .M = -10000, 1.92880574639306, 10000, 0)
+       (1.012)  distanceC
+
+miuLH(LH1,3)
+                (.LO, .L, .UP, .M = -10000, 3.08677761996433, 10000, 0)
+       (1.4136) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- alphaLH  
+
+alphaLH(LH1,1)
+                (.LO, .L, .UP, .M = 0, 2.45286783717189, 10000, 0)
+      (-0.025)  distanceC
+
+alphaLH(LH1,2)
+                (.LO, .L, .UP, .M = 0, 3.29947882895825, 10000, 0)
+       (0.022)  distanceC
+
+alphaLH(LH1,3)
+                (.LO, .L, .UP, .M = 0, 3.18716303569967, 10000, 0)
+      (-0.0133) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- pi  
+
+pi(UH1,LH1)
+                (.LO, .L, .UP, .M = 0, 0.66, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH1)
+      (53.0303) distanceC
+
+pi(UH1,LH2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 29261.5422242731)
+        1       ec1(UH1)
+        1       ec2(LH2)
+    (4684.3383) distanceC
+
+pi(UH1,LH3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH3)
+    (1193.0534) distanceC
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 3740.54987133642, +INF, 0)
+        1       obj1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 29
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE mymodel Using NLP From line 205
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.600E-01, 9.064E+01]
+Bound     [min, max] : [ 1.000E+00, 1.000E+04] - Zero values observed as well
+Matrix    [min, max] : [ 5.684E-14, 4.684E+03] - Zero values observed as well
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 30
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mymodel Using NLP From line 205
+
+
+LOOPS                           *            UH2
+                                *            LH2
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES           70
+NON ZERO ELEMENTS           108     NON LINEAR N-Z             89
+CODE LENGTH                 932     CONSTANT POOL              79
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  47.6.0 c2de9d6d WEX-WEI
+               L O O P S         *          UH2
+                                 *          LH2
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 31
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mymodel Using NLP From line 205
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mymodel             OBJECTIVE  z
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  BARON               FROM LINE  205
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                0.0000
+
+ RESOURCE USAGE, LIMIT          0.390        30.000
+ ITERATION COUNT, LIMIT         0    2147483647
+ EVALUATION ERRORS              0             0
+
+GAMS/BARON       47.6.0 c2de9d6d Sep 12, 2024          WEI x86 64bit/MS Window
+
+BARON is a product of The Optimization Firm, LLC. http://www.minlp.com/
+Parts of the BARON software were created at the
+University of Illinois at Urbana-Champaign.
+
+
+===========================================================================
+ BARON version 24.5.8. Built: WIN-64 Wed May 8 10:05:37 EDT 2024 
+ Running on machine ZHONGYU_CAMPUS
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC, ILOG CPLEX                             
+
+Solution      = 0  found at node 1
+Best possible = 0
+Absolute gap  = 0  optca = 0.1
+Relative gap  = 0  optcr = 0.01
+
+
+---- EQU ec1  
+
+           LOWER          LEVEL          UPPER
+
+UH1         0.6600         0.6600         0.6600      
+UH2         0.1800         0.1800         0.1800      
+UH3         0.1600         0.1600         0.1600      
+
+---- EQU ec2  
+
+           LOWER          LEVEL          UPPER
+
+LH1         0.6600         0.6600         0.6600      
+LH2         0.1800         0.1800         0.1800      
+LH3         0.1600         0.1600         0.1600      
+
+                           LOWER          LEVEL          UPPER
+
+---- EQU distanceC         -INF           31.2838        35.0000      
+---- EQU obj1              90.6383        90.6383        90.6383      
+
+---- VAR miuLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1     -10000.0000         2.5361     10000.0000      
+LH1.2     -10000.0000        -1.5547     10000.0000      
+LH1.3     -10000.0000        -1.0892     10000.0000      
+LH1.4     -10000.0000         2.5337     10000.0000      
+LH1.5     -10000.0000         3.3724     10000.0000      
+LH1.6     -10000.0000         3.9798     10000.0000      
+LH1.7     -10000.0000         6.6392     10000.0000      
+LH1.8     -10000.0000         6.2610     10000.0000      
+LH1.9     -10000.0000         7.1192     10000.0000      
+LH1.10    -10000.0000         6.9418     10000.0000      
+LH2.1     -10000.0000         4.7272     10000.0000      
+LH2.2     -10000.0000         8.3675     10000.0000      
+LH2.3     -10000.0000        12.0807     10000.0000      
+LH2.4     -10000.0000        17.5266     10000.0000      
+LH2.5     -10000.0000        20.7792     10000.0000      
+LH2.6     -10000.0000        25.2755     10000.0000      
+LH2.7     -10000.0000        29.4502     10000.0000      
+LH2.8     -10000.0000        33.1625     10000.0000      
+LH2.9     -10000.0000        38.9606     10000.0000      
+LH2.10    -10000.0000        42.4541     10000.0000      
+LH3.1     -10000.0000         2.0979     10000.0000      
+LH3.2     -10000.0000         4.3870     10000.0000      
+LH3.3     -10000.0000         6.8467     10000.0000      
+LH3.4     -10000.0000        11.1218     10000.0000      
+LH3.5     -10000.0000        12.0497     10000.0000      
+LH3.6     -10000.0000        14.4131     10000.0000      
+LH3.7     -10000.0000        17.2426     10000.0000      
+LH3.8     -10000.0000        18.0889     10000.0000      
+LH3.9     -10000.0000        23.2897     10000.0000      
+LH3.10    -10000.0000        26.2770     10000.0000      
+
+---- VAR alphaLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1           .             8.3410     10000.0000      
+LH1.2           .             0.2986     10000.0000      
+LH1.3           .             8.5659     10000.0000      
+LH1.4           .             3.2923     10000.0000      
+LH1.5           .            14.4677     10000.0000      
+LH1.6           .             3.4108     10000.0000      
+LH1.7           .            13.6696     10000.0000      
+LH1.8           .            10.8805     10000.0000      
+LH1.9           .            25.0999     10000.0000      
+LH1.10          .            17.1474     10000.0000      
+LH2.1           .             1.1420     10000.0000      
+LH2.2           .             5.4063     10000.0000      
+LH2.3           .             2.2003     10000.0000      
+LH2.4           .             5.5438     10000.0000      
+LH2.5           .             3.2109     10000.0000      
+LH2.6           .            17.2769     10000.0000      
+LH2.7           .            15.7418     10000.0000      
+LH2.8           .             4.6885     10000.0000      
+LH2.9           .            21.7610     10000.0000      
+LH2.10          .            13.6668     10000.0000      
+LH3.1           .             2.0487     10000.0000      
+LH3.2           .             0.0742     10000.0000      
+LH3.3           .             2.0761     10000.0000      
+LH3.4           .             2.4005     10000.0000      
+LH3.5           .             2.1484     10000.0000      
+LH3.6           .             3.2544     10000.0000      
+LH3.7           .             2.3664     10000.0000      
+LH3.8           .             1.8439     10000.0000      
+LH3.9           .            67.9424     10000.0000      
+LH3.10          .             0.3546     10000.0000      
+
+---- VAR pi  
+
+               LOWER          LEVEL          UPPER
+
+UH1.LH1          .             0.6600         1.0000      
+UH1.LH2          .              .             1.0000      
+UH1.LH3          .              .             1.0000      
+UH2.LH1          .              .             1.0000      
+UH2.LH2          .             0.1800         1.0000      
+UH2.LH3          .              .             1.0000      
+UH3.LH1          .              .             1.0000      
+UH3.LH2          .              .             1.0000      
+UH3.LH3          .             0.1600         1.0000      
+
+                           LOWER          LEVEL          UPPER
+
+---- VAR z                 -INF             .            +INF         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 32
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    212 Objective Value =
+            VARIABLE z.L                   =        0.000  
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 33
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE mymodel Using NLP From line 205
+
+
+---- ec1  =E=  
+
+ec1(UH1)..  pi(UH1,LH1) + pi(UH1,LH2) + pi(UH1,LH3) =E= 0.66 ; (LHS = 0.66)
+     
+ec1(UH2)..  pi(UH2,LH1) + pi(UH2,LH2) + pi(UH2,LH3) =E= 0.18 ; (LHS = 0.18)
+     
+ec1(UH3)..  pi(UH3,LH1) + pi(UH3,LH2) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- ec2  =E=  
+
+ec2(LH1)..  pi(UH1,LH1) + pi(UH2,LH1) + pi(UH3,LH1) =E= 0.66 ; (LHS = 0.66)
+     
+ec2(LH2)..  pi(UH1,LH2) + pi(UH2,LH2) + pi(UH3,LH2) =E= 0.18 ; (LHS = 0.18)
+     
+ec2(LH3)..  pi(UH1,LH3) + pi(UH2,LH3) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- distanceC  =L=  
+
+distanceC..  (2.19223585900802)*miuLH(LH1,1) - (3.58622293785543)*miuLH(LH1,2) - (4.09875459505362)*miuLH(LH1,3) - (0.0921836800833392)*miuLH(LH1,4) - (0.943120148670393)*miuLH(LH1,5) - (0.352548181492398)*miuLH(LH1,6) + (0.324755704858998)*miuLH(LH1,7) + (0.145758337911157)*miuLH(LH1,8) + (0.23257720650009)*miuLH(LH1,9) + (0.290639279965681)*miuLH(LH1,10) - (1.30282984400765E-11)*miuLH(LH2,1) + (2.35466046660804E-11)*miuLH(LH2,2) + (2.93589152988716E-12)*miuLH(LH2,3) - (2.95840152375604E-11)*miuLH(LH2,4) - (3.7422864807013E-12)*miuLH(LH2,5) + (4.63245442006155E-12)*miuLH(LH2,6) - (1.42925671298144E-11)*miuLH(LH2,7) + (2.05915284823277E-11)*miuLH(LH2,8) + (1.6979697647912E-11)*miuLH(LH2,9) + (2.67331756731437E-11)*miuLH(LH2,10) + (0.8415744)*miuLH(LH3,1) + (1.27388832)*miuLH(LH3,2) + (1.67492576)*miuLH(LH3,3) + (2.04952928)*miuLH(LH3,4) + (2.79344352)*miuLH(LH3,5) + (3.47595104)*miuLH(LH3,6) + (3.90638496)*miuLH(LH3,7) + (4.82351584)*miuLH(LH3,8) + (5.01463328)*miuLH(LH3,9) + (5.17664992)*miuLH(LH3,10) + (0.288553492298071)*alphaLH(LH1,1) - (1.46070184336839)*alphaLH(LH1,2) + (0.249306251729168)*alphaLH(LH1,3) - (0.263333982493597)*alphaLH(LH1,4) + (0.104919871844467)*alphaLH(LH1,5) - (0.583613665526804)*alphaLH(LH1,6) + (0.0188697540261219)*alphaLH(LH1,7) - (0.215147909183927)*alphaLH(LH1,8) + (0.189535719941576)*alphaLH(LH1,9) + (0.019494956325116)*alphaLH(LH1,10) + (6.63337966555488E-9)*alphaLH(LH2,1) - (9.20119940239772E-10)*alphaLH(LH2,2) - (1.66993582961794E-9)*alphaLH(LH2,3) - (1.87158804454413E-9)*alphaLH(LH2,4) + (1.75924395051652E-10)*alphaLH(LH2,5) + (7.21273041293102E-12)*alphaLH(LH2,6) - (5.68350566609865E-10)*alphaLH(LH2,7) - (6.41897495157195E-10)*alphaLH(LH2,8) + (1.53112522660592E-11)*alphaLH(LH2,9) - (3.0815058504885E-10)*alphaLH(LH2,10) - (0.0328930007528728)*alphaLH(LH3,1) + (0.0992248295693861)*alphaLH(LH3,2) - (0.0558196503938842)*alphaLH(LH3,3) - (0.0167212272915496)*alphaLH(LH3,4) - (0.186954772202977)*alphaLH(LH3,5) + (0.0200336580651471)*alphaLH(LH3,6) - (0.0563306175274104)*alphaLH(LH3,7) - (0.258508308793466)*alphaLH(LH3,8) + (0.0189968327195863)*alphaLH(LH3,9) + (0.0491536410495433)*alphaLH(LH3,10) + (31.6084002205261)*pi(UH1,LH1) + (4684.33828125373)*pi(UH1,LH2) + (4684.33828125973)*pi(UH1,LH3) + (4796.92839798532)*pi(UH2,LH1) + (0)*pi(UH2,LH2) + (0)*pi(UH2,LH3) + (1263.09062419124)*pi(UH3,LH1) + (1191.77390357961)*pi(UH3,LH2) + (1191.77390353288)*pi(UH3,LH3) =L= 35 ; (LHS = 211.545368710808, INFES = 176.545368710808 ****)
+     
+
+---- obj1  =E=  
+
+obj1..  (0)*miuLH(LH3,1) + (0)*miuLH(LH3,2) + (0)*miuLH(LH3,3) + (0)*miuLH(LH3,4) + (0)*miuLH(LH3,5) + (0)*miuLH(LH3,6) + (0)*miuLH(LH3,7) + (0)*miuLH(LH3,8) + (0)*miuLH(LH3,9) + (0)*miuLH(LH3,10) + (0)*alphaLH(LH3,1) + (0)*alphaLH(LH3,2) + (0)*alphaLH(LH3,3) + (0)*alphaLH(LH3,4) + (0)*alphaLH(LH3,5) + (0)*alphaLH(LH3,6) + (0)*alphaLH(LH3,7) + (0)*alphaLH(LH3,8) + (0)*alphaLH(LH3,9) + (0)*alphaLH(LH3,10) + z =E= 90.638306 ; (LHS = 90.638306)
+     
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 34
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE mymodel Using NLP From line 205
+
+
+---- miuLH  
+
+miuLH(LH1,1)
+                (.LO, .L, .UP, .M = -10000, 2.53611374167274, 10000, NA)
+       (2.1922) distanceC
+
+miuLH(LH1,2)
+                (.LO, .L, .UP, .M = -10000, -1.55467455898139, 10000, NA)
+      (-3.5862) distanceC
+
+miuLH(LH1,3)
+                (.LO, .L, .UP, .M = -10000, -1.08923011746487, 10000, NA)
+      (-4.0988) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- alphaLH  
+
+alphaLH(LH1,1)
+                (.LO, .L, .UP, .M = 0, 8.34095535394415, 10000, NA)
+       (0.2886) distanceC
+
+alphaLH(LH1,2)
+                (.LO, .L, .UP, .M = 0, 0.298618283969673, 10000, NA)
+      (-1.4607) distanceC
+
+alphaLH(LH1,3)
+                (.LO, .L, .UP, .M = 0, 8.56591165078156, 10000, NA)
+       (0.2493) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- pi  
+
+pi(UH1,LH1)
+                (.LO, .L, .UP, .M = 0, 0.66, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH1)
+      (31.6084) distanceC
+
+pi(UH1,LH2)
+                (.LO, .L, .UP, .M = 0, 0, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH2)
+    (4684.3383) distanceC
+
+pi(UH1,LH3)
+                (.LO, .L, .UP, .M = 0, 0, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH3)
+    (4684.3383) distanceC
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       obj1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 35
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE mymodel Using NLP From line 205
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.600E-01, 9.064E+01]
+Bound     [min, max] : [ 1.000E+00, 1.000E+04] - Zero values observed as well
+Matrix    [min, max] : [ 2.936E-12, 4.797E+03] - Zero values observed as well
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 36
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mymodel Using NLP From line 205
+
+
+LOOPS                           *            UH2
+                                *            LH3
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES           70
+NON ZERO ELEMENTS           108     NON LINEAR N-Z             89
+CODE LENGTH                 932     CONSTANT POOL              79
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  47.6.0 c2de9d6d WEX-WEI
+               L O O P S         *          UH2
+                                 *          LH3
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 37
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mymodel Using NLP From line 205
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mymodel             OBJECTIVE  z
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  BARON               FROM LINE  205
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                0.0000
+
+ RESOURCE USAGE, LIMIT          0.460        30.000
+ ITERATION COUNT, LIMIT         0    2147483647
+ EVALUATION ERRORS              0             0
+
+GAMS/BARON       47.6.0 c2de9d6d Sep 12, 2024          WEI x86 64bit/MS Window
+
+BARON is a product of The Optimization Firm, LLC. http://www.minlp.com/
+Parts of the BARON software were created at the
+University of Illinois at Urbana-Champaign.
+
+
+===========================================================================
+ BARON version 24.5.8. Built: WIN-64 Wed May 8 10:05:37 EDT 2024 
+ Running on machine ZHONGYU_CAMPUS
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC, ILOG CPLEX                             
+
+Solution      = 0  found at node 1
+Best possible = 0
+Absolute gap  = 0  optca = 0.1
+Relative gap  = 0  optcr = 0.01
+
+
+---- EQU ec1  
+
+           LOWER          LEVEL          UPPER
+
+UH1         0.6600         0.6600         0.6600      
+UH2         0.1800         0.1800         0.1800      
+UH3         0.1600         0.1600         0.1600      
+
+---- EQU ec2  
+
+           LOWER          LEVEL          UPPER
+
+LH1         0.6600         0.6600         0.6600      
+LH2         0.1800         0.1800         0.1800      
+LH3         0.1600         0.1600         0.1600      
+
+                           LOWER          LEVEL          UPPER
+
+---- EQU distanceC         -INF           34.0434        35.0000      
+---- EQU obj1              90.6383        90.6383        90.6383      
+
+---- VAR miuLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1     -10000.0000         0.8787     10000.0000      
+LH1.2     -10000.0000         1.1701     10000.0000      
+LH1.3     -10000.0000         2.0275     10000.0000      
+LH1.4     -10000.0000         2.6230     10000.0000      
+LH1.5     -10000.0000         4.1061     10000.0000      
+LH1.6     -10000.0000         4.2713     10000.0000      
+LH1.7     -10000.0000         6.4196     10000.0000      
+LH1.8     -10000.0000         6.1801     10000.0000      
+LH1.9     -10000.0000         6.9816     10000.0000      
+LH1.10    -10000.0000         6.7668     10000.0000      
+LH2.1     -10000.0000         2.3919     10000.0000      
+LH2.2     -10000.0000         4.8237     10000.0000      
+LH2.3     -10000.0000         7.4175     10000.0000      
+LH2.4     -10000.0000        11.8037     10000.0000      
+LH2.5     -10000.0000        13.0025     10000.0000      
+LH2.6     -10000.0000        15.5971     10000.0000      
+LH2.7     -10000.0000        18.5770     10000.0000      
+LH2.8     -10000.0000        19.7459     10000.0000      
+LH2.9     -10000.0000        24.9871     10000.0000      
+LH2.10    -10000.0000        28.0120     10000.0000      
+LH3.1     -10000.0000         4.7272     10000.0000      
+LH3.2     -10000.0000         8.3675     10000.0000      
+LH3.3     -10000.0000        12.0807     10000.0000      
+LH3.4     -10000.0000        17.5266     10000.0000      
+LH3.5     -10000.0000        20.7792     10000.0000      
+LH3.6     -10000.0000        25.2755     10000.0000      
+LH3.7     -10000.0000        29.4502     10000.0000      
+LH3.8     -10000.0000        33.1625     10000.0000      
+LH3.9     -10000.0000        38.9606     10000.0000      
+LH3.10    -10000.0000        42.4541     10000.0000      
+
+---- VAR alphaLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1           .             5.3639     10000.0000      
+LH1.2           .             5.8433     10000.0000      
+LH1.3           .             6.0971     10000.0000      
+LH1.4           .             9.2733     10000.0000      
+LH1.5           .            12.9736     10000.0000      
+LH1.6           .            14.7932     10000.0000      
+LH1.7           .            15.5746     10000.0000      
+LH1.8           .            21.5823     10000.0000      
+LH1.9           .            15.4155     10000.0000      
+LH1.10          .            18.6742     10000.0000      
+LH2.1           .             9.4988     10000.0000      
+LH2.2           .             8.5024     10000.0000      
+LH2.3           .            12.7170     10000.0000      
+LH2.4           .            16.2248     10000.0000      
+LH2.5           .            23.5111     10000.0000      
+LH2.6           .            23.8790     10000.0000      
+LH2.7           .            37.2332     10000.0000      
+LH2.8           .            37.8487     10000.0000      
+LH2.9           .            27.7270     10000.0000      
+LH2.10          .            16.9482     10000.0000      
+LH3.1           .             1.1420     10000.0000      
+LH3.2           .             5.4063     10000.0000      
+LH3.3           .             2.2003     10000.0000      
+LH3.4           .             5.5438     10000.0000      
+LH3.5           .             3.2109     10000.0000      
+LH3.6           .            17.2769     10000.0000      
+LH3.7           .            15.7418     10000.0000      
+LH3.8           .             4.6885     10000.0000      
+LH3.9           .            21.7610     10000.0000      
+LH3.10          .            13.6668     10000.0000      
+
+---- VAR pi  
+
+               LOWER          LEVEL          UPPER
+
+UH1.LH1          .             0.6586         1.0000      
+UH1.LH2          .             0.0012         1.0000      
+UH1.LH3          .             0.0002         1.0000      
+UH2.LH1          .             0.0002         1.0000      
+UH2.LH2          .             0.0212         1.0000      
+UH2.LH3          .             0.1586         1.0000      
+UH3.LH1          .             0.0012         1.0000      
+UH3.LH2          .             0.1577         1.0000      
+UH3.LH3          .             0.0012         1.0000      
+
+                           LOWER          LEVEL          UPPER
+
+---- VAR z                 -INF             .            +INF         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 38
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    212 Objective Value =
+            VARIABLE z.L                   =        0.000  
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 39
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE mymodel Using NLP From line 205
+
+
+---- ec1  =E=  
+
+ec1(UH1)..  pi(UH1,LH1) + pi(UH1,LH2) + pi(UH1,LH3) =E= 0.66 ; (LHS = 0.66)
+     
+ec1(UH2)..  pi(UH2,LH1) + pi(UH2,LH2) + pi(UH2,LH3) =E= 0.18 ; (LHS = 0.18)
+     
+ec1(UH3)..  pi(UH3,LH1) + pi(UH3,LH2) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- ec2  =E=  
+
+ec2(LH1)..  pi(UH1,LH1) + pi(UH2,LH1) + pi(UH3,LH1) =E= 0.66 ; (LHS = 0.66)
+     
+ec2(LH2)..  pi(UH1,LH2) + pi(UH2,LH2) + pi(UH3,LH2) =E= 0.18 ; (LHS = 0.18)
+     
+ec2(LH3)..  pi(UH1,LH3) + pi(UH2,LH3) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- distanceC  =L=  
+
+distanceC..  (1.60830876462835)*miuLH(LH1,1) + (4.2453033553362)*miuLH(LH1,2) + (6.36040675625399)*miuLH(LH1,3) + (11.2171019194994)*miuLH(LH1,4) + (10.4842912521592)*miuLH(LH1,5) + (13.3856760815195)*miuLH(LH1,6) + (14.2849902276496)*miuLH(LH1,7) + (15.7179050925901)*miuLH(LH1,8) + (21.5242251357496)*miuLH(LH1,9) + (25.7503610787074)*miuLH(LH1,10) - (0.00256237297155287)*miuLH(LH2,1) - (0.00386100701948641)*miuLH(LH2,2) - (0.0050689014486657)*miuLH(LH2,3) - (0.00616930565864057)*miuLH(LH2,4) - (0.00845495999065365)*miuLH(LH2,5) - (0.010517354265825)*miuLH(LH2,6) - (0.0118270678426182)*miuLH(LH2,7) - (0.0146222913834669)*miuLH(LH2,8) - (0.0151515094424615)*miuLH(LH2,9) - (0.0156068651787288)*miuLH(LH2,10) + (0.00811845236965508)*miuLH(LH3,1) + (0.0129762331578502)*miuLH(LH3,2) + (0.0173568835129228)*miuLH(LH3,3) + (0.0225423787929134)*miuLH(LH3,4) + (0.0289009161604968)*miuLH(LH3,5) + (0.0360911147818782)*miuLH(LH3,6) + (0.0402725238498428)*miuLH(LH3,7) + (0.0489984631732471)*miuLH(LH3,8) + (0.0529074836839398)*miuLH(LH3,9) + (0.0559570702638453)*miuLH(LH3,10) - (0.172250593008)*alphaLH(LH1,1) - (0.651136068515954)*alphaLH(LH1,2) + (0.0591796910693464)*alphaLH(LH1,3) + (0.015768355993373)*alphaLH(LH1,4) + (0.116518396564769)*alphaLH(LH1,5) + (0.0282528715819069)*alphaLH(LH1,6) + (0.217722109440017)*alphaLH(LH1,7) + (0.150140265887962)*alphaLH(LH1,8) + (0.0864388967241935)*alphaLH(LH1,9) - (0.374891425536904)*alphaLH(LH1,10) + (0.106139034805108)*alphaLH(LH2,1) + (0.114654331975899)*alphaLH(LH2,2) + (0.0821409825752372)*alphaLH(LH2,3) + (0.0650995758244007)*alphaLH(LH2,4) + (0.0450680211952387)*alphaLH(LH2,5) + (0.0438431785756784)*alphaLH(LH2,6) + (0.0269416885395844)*alphaLH(LH2,7) + (0.0265816121168816)*alphaLH(LH2,8) + (0.0373603256000107)*alphaLH(LH2,9) + (0.0617629926567733)*alphaLH(LH2,10) - (0.000372274878255851)*alphaLH(LH3,1) + (0.000791333838040187)*alphaLH(LH3,2) - (0.000467684543374184)*alphaLH(LH3,3) - (0.000142564557501274)*alphaLH(LH3,4) - (0.00157197599066387)*alphaLH(LH3,5) + (0.000188108412143152)*alphaLH(LH3,6) - (0.000390803253402958)*alphaLH(LH3,7) - (0.0021571666426637)*alphaLH(LH3,8) + (0.000198392317177852)*alphaLH(LH3,9) + (0.000339929209695349)*alphaLH(LH3,10) + (1193.05341572595)*pi(UH1,LH1) + (1475.76395321733)*pi(UH1,LH2) + (4684.3382812586)*pi(UH1,LH3) + (1191.77390353288)*pi(UH2,LH1) + (971.133868475845)*pi(UH2,LH2) + (0)*pi(UH2,LH3) + (0)*pi(UH3,LH1) + (32.6575198274543)*pi(UH3,LH2) + (1191.77390353198)*pi(UH3,LH3) =L= 35 ; (LHS = 816.029098959958, INFES = 781.029098959958 ****)
+     
+
+---- obj1  =E=  
+
+obj1..  (0)*miuLH(LH1,1) + (0)*miuLH(LH1,2) + (0)*miuLH(LH1,3) + (0)*miuLH(LH1,4) + (0)*miuLH(LH1,5) + (0)*miuLH(LH1,6) + (0)*miuLH(LH1,7) + (0)*miuLH(LH1,8) + (0)*miuLH(LH1,9) + (0)*miuLH(LH1,10) + (0)*alphaLH(LH1,1) + (0)*alphaLH(LH1,2) + (0)*alphaLH(LH1,3) - (1.11022302462516E-16)*alphaLH(LH1,4) + (0)*alphaLH(LH1,5) - (1.11022302462516E-16)*alphaLH(LH1,6) + (0)*alphaLH(LH1,7) + (0)*alphaLH(LH1,8) + (0)*alphaLH(LH1,9) - (1.11022302462516E-16)*alphaLH(LH1,10) + z =E= 125.841061 ; (LHS = 125.841061)
+     
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 40
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE mymodel Using NLP From line 205
+
+
+---- miuLH  
+
+miuLH(LH1,1)
+                (.LO, .L, .UP, .M = -10000, 2.097307, 10000, NA)
+       (1.6083) distanceC
+       (0)      obj1
+
+miuLH(LH1,2)
+                (.LO, .L, .UP, .M = -10000, 4.386629, 10000, NA)
+       (4.2453) distanceC
+       (0)      obj1
+
+miuLH(LH1,3)
+                (.LO, .L, .UP, .M = -10000, 6.846591, 10000, NA)
+       (6.3604) distanceC
+       (0)      obj1
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- alphaLH  
+
+alphaLH(LH1,1)
+                (.LO, .L, .UP, .M = 0, 1.659865, 10000, NA)
+      (-0.1723) distanceC
+       (0)      obj1
+
+alphaLH(LH1,2)
+                (.LO, .L, .UP, .M = 0, 0.780038, 10000, NA)
+      (-0.6511) distanceC
+       (0)      obj1
+
+alphaLH(LH1,3)
+                (.LO, .L, .UP, .M = 0, 4.003264, 10000, NA)
+       (0.0592) distanceC
+       (0)      obj1
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- pi  
+
+pi(UH1,LH1)
+                (.LO, .L, .UP, .M = 0, 0.658590046240338, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH1)
+    (1193.0534) distanceC
+
+pi(UH1,LH2)
+                (.LO, .L, .UP, .M = 0, 0.00115996202548442, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH2)
+    (1475.764)  distanceC
+
+pi(UH1,LH3)
+                (.LO, .L, .UP, .M = 0, 0.000249991734177894, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH3)
+    (4684.3383) distanceC
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       obj1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 41
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE mymodel Using NLP From line 205
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.600E-01, 1.258E+02]
+Bound     [min, max] : [ 1.000E+00, 1.000E+04] - Zero values observed as well
+Matrix    [min, max] : [ 1.110E-16, 4.684E+03] - Zero values observed as well
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 42
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mymodel Using NLP From line 205
+
+
+LOOPS                           *            UH3
+                                *            LH1
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES           70
+NON ZERO ELEMENTS           108     NON LINEAR N-Z             89
+CODE LENGTH                 932     CONSTANT POOL              79
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  47.6.0 c2de9d6d WEX-WEI
+               L O O P S         *          UH3
+                                 *          LH1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 43
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mymodel Using NLP From line 205
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mymodel             OBJECTIVE  z
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  BARON               FROM LINE  205
+
+**** SOLVER STATUS     3 Resource Interrupt
+**** MODEL STATUS      2 Locally Optimal
+**** OBJECTIVE VALUE              743.0212
+
+ RESOURCE USAGE, LIMIT         40.030        30.000
+ ITERATION COUNT, LIMIT         0    2147483647
+ EVALUATION ERRORS              0             0
+
+GAMS/BARON       47.6.0 c2de9d6d Sep 12, 2024          WEI x86 64bit/MS Window
+
+BARON is a product of The Optimization Firm, LLC. http://www.minlp.com/
+Parts of the BARON software were created at the
+University of Illinois at Urbana-Champaign.
+
+
+===========================================================================
+ BARON version 24.5.8. Built: WIN-64 Wed May 8 10:05:37 EDT 2024 
+ Running on machine ZHONGYU_CAMPUS
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC, ILOG CPLEX                             
+
+Solution      = 743.021152606726  found at node 45
+Best possible = 585.808628191589
+Absolute gap  = 157.212524415137  optca = 0.1
+Relative gap  = 0.211585530053339  optcr = 0.01
+
+
+---- EQU ec1  
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+UH1         0.6600         0.6600         0.6600       300.7591      
+UH2         0.1800         0.1800         0.1800    -13224.6849      
+UH3         0.1600         0.1600         0.1600     -6465.5912      
+
+---- EQU ec2  
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+LH1         0.6600         0.6600         0.6600          .          
+LH2         0.1800         0.1800         0.1800     13224.6849      
+LH3         0.1600         0.1600         0.1600      6465.5912      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU distanceC         -INF           35.0000        35.0000        -5.6715      
+---- EQU obj1             125.8411       125.8411       125.8411         1.0000      
+
+---- VAR miuLH  
+
+              LOWER          LEVEL          UPPER         MARGINAL
+
+LH1.1     -10000.0000         1.1330     10000.0000          .          
+LH1.2     -10000.0000         1.8420     10000.0000          .          
+LH1.3     -10000.0000         3.0343     10000.0000          .          
+LH1.4     -10000.0000         4.3994     10000.0000          .          
+LH1.5     -10000.0000         5.7657     10000.0000          .          
+LH1.6     -10000.0000         6.3902     10000.0000          .          
+LH1.7     -10000.0000         8.6806     10000.0000          .          
+LH1.8     -10000.0000         8.6676     10000.0000          .          
+LH1.9     -10000.0000        10.3894     10000.0000          .          
+LH1.10    -10000.0000        10.8445     10000.0000          .          
+LH2.1     -10000.0000         4.7272     10000.0000          .          
+LH2.2     -10000.0000         8.3675     10000.0000          .          
+LH2.3     -10000.0000        12.0807     10000.0000          .          
+LH2.4     -10000.0000        17.5266     10000.0000          .          
+LH2.5     -10000.0000        20.7792     10000.0000          .          
+LH2.6     -10000.0000        25.2755     10000.0000          .          
+LH2.7     -10000.0000        29.4502     10000.0000          .          
+LH2.8     -10000.0000        33.1625     10000.0000          .          
+LH2.9     -10000.0000        38.9606     10000.0000          .          
+LH2.10    -10000.0000        42.4541     10000.0000          .          
+LH3.1     -10000.0000         2.0973     10000.0000          .          
+LH3.2     -10000.0000         4.3866     10000.0000          .          
+LH3.3     -10000.0000         6.8466     10000.0000          .          
+LH3.4     -10000.0000        11.1218     10000.0000          .          
+LH3.5     -10000.0000        12.0497     10000.0000          .          
+LH3.6     -10000.0000        14.4132     10000.0000          .          
+LH3.7     -10000.0000        17.2428     10000.0000          .          
+LH3.8     -10000.0000        18.0891     10000.0000          .          
+LH3.9     -10000.0000        23.2899     10000.0000          .          
+LH3.10    -10000.0000        26.2771     10000.0000          .          
+
+---- VAR alphaLH  
+
+              LOWER          LEVEL          UPPER         MARGINAL
+
+LH1.1           .             2.4160     10000.0000          .          
+LH1.2           .             2.4708     10000.0000          .          
+LH1.3           .             3.4562     10000.0000          .          
+LH1.4           .             6.5103     10000.0000          .          
+LH1.5           .            11.1807     10000.0000          .          
+LH1.6           .            12.3402     10000.0000          .          
+LH1.7           .            15.7237     10000.0000          .          
+LH1.8           .            21.5833     10000.0000          .          
+LH1.9           .            13.5795     10000.0000          .          
+LH1.10          .            13.7741     10000.0000          .          
+LH2.1           .             1.1420     10000.0000          .          
+LH2.2           .             5.4063     10000.0000          .          
+LH2.3           .             2.2003     10000.0000          .          
+LH2.4           .             5.5438     10000.0000          .          
+LH2.5           .             3.2109     10000.0000          .          
+LH2.6           .            17.2769     10000.0000          .          
+LH2.7           .            15.7418     10000.0000          .          
+LH2.8           .             4.6885     10000.0000          .          
+LH2.9           .            21.7610     10000.0000          .          
+LH2.10          .            13.6668     10000.0000          .          
+LH3.1           .             1.6599     10000.0000          .          
+LH3.2           .             0.7800     10000.0000          .          
+LH3.3           .             4.0033     10000.0000          .          
+LH3.4           .             6.7631     10000.0000          .          
+LH3.5           .            15.0985     10000.0000          .          
+LH3.6           .            13.2213     10000.0000          .          
+LH3.7           .            28.7773     10000.0000          .          
+LH3.8           .            32.0779     10000.0000          .          
+LH3.9           .            16.9004     10000.0000          .          
+LH3.10          .             6.5595     10000.0000          .          
+
+---- VAR pi  
+
+               LOWER          LEVEL          UPPER         MARGINAL
+
+UH1.LH1          .             0.6600         1.0000          .          
+UH1.LH2          .              .             1.0000     13041.5759      
+UH1.LH3          .              .             1.0000          .          
+UH2.LH1          .              .             1.0000     34489.8127      
+UH2.LH2          .             0.1800         1.0000          .          
+UH2.LH3          .              .             1.0000     13518.1872      
+UH3.LH1          .              .             1.0000     10679.6032      
+UH3.LH2          .              .             1.0000          .          
+UH3.LH3          .             0.1600         1.0000          .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR z                 -INF          743.0212        +INF             .          
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 44
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    212 Objective Value =
+            VARIABLE z.L                   =      743.021  
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 45
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE mymodel Using NLP From line 205
+
+
+---- ec1  =E=  
+
+ec1(UH1)..  pi(UH1,LH1) + pi(UH1,LH2) + pi(UH1,LH3) =E= 0.66 ; (LHS = 0.66)
+     
+ec1(UH2)..  pi(UH2,LH1) + pi(UH2,LH2) + pi(UH2,LH3) =E= 0.18 ; (LHS = 0.18)
+     
+ec1(UH3)..  pi(UH3,LH1) + pi(UH3,LH2) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- ec2  =E=  
+
+ec2(LH1)..  pi(UH1,LH1) + pi(UH2,LH1) + pi(UH3,LH1) =E= 0.66 ; (LHS = 0.66)
+     
+ec2(LH2)..  pi(UH1,LH2) + pi(UH2,LH2) + pi(UH3,LH2) =E= 0.18 ; (LHS = 0.18)
+     
+ec2(LH3)..  pi(UH1,LH3) + pi(UH2,LH3) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- distanceC  =L=  
+
+distanceC..  (0.340070874148475)*miuLH(LH1,1) + (0.897354659408298)*miuLH(LH1,2) + (1.34436277332996)*miuLH(LH1,3) + (2.37060939802272)*miuLH(LH1,4) + (2.21601490317683)*miuLH(LH1,5) + (2.8292382930805)*miuLH(LH1,6) + (3.01938224365224)*miuLH(LH1,7) + (3.32241951201048)*miuLH(LH1,8) + (4.54924616563822)*miuLH(LH1,9) + (5.44220041849382)*miuLH(LH1,10) - (0.9467712)*miuLH(LH2,1) - (1.43312436)*miuLH(LH2,2) - (1.88429148)*miuLH(LH2,3) - (2.30572044)*miuLH(LH2,4) - (3.14262396)*miuLH(LH2,5) - (3.91044492)*miuLH(LH2,6) - (4.39468308)*miuLH(LH2,7) - (5.42645532)*miuLH(LH2,8) - (5.64146244)*miuLH(LH2,9) - (5.82373116)*miuLH(LH2,10) - (2.81586522987709E-10)*miuLH(LH3,1) - (1.51290748817701E-10)*miuLH(LH3,2) - (8.06960542831803E-11)*miuLH(LH3,3) + (4.22684820478025E-10)*miuLH(LH3,4) - (1.53352743836876E-10)*miuLH(LH3,5) - (1.39224880513211E-10)*miuLH(LH3,6) - (2.71596718448564E-10)*miuLH(LH3,7) - (6.27019289822783E-10)*miuLH(LH3,8) + (1.35185018734774E-10)*miuLH(LH3,9) + (6.75640876579564E-10)*miuLH(LH3,10) - (0.0301727078069022)*alphaLH(LH1,1) - (0.0772517547520929)*alphaLH(LH1,2) + (0.0134427829627028)*alphaLH(LH1,3) + (0.00339075831018804)*alphaLH(LH1,4) + (0.0285764084908407)*alphaLH(LH1,5) + (0.00618620957384909)*alphaLH(LH1,6) + (0.0622137936952588)*alphaLH(LH1,7) + (0.0386345084797031)*alphaLH(LH1,8) + (0.0203815687248957)*alphaLH(LH1,9) - (0.054644544367866)*alphaLH(LH1,10) + (0.0306944270264245)*alphaLH(LH2,1) - (0.293877733224632)*alphaLH(LH2,2) + (0.0465552467190164)*alphaLH(LH2,3) + (0.0170314622561636)*alphaLH(LH2,4) + (0.0969920626335951)*alphaLH(LH2,5) - (0.0257637543560644)*alphaLH(LH2,6) + (0.0468704396577111)*alphaLH(LH2,7) + (0.11118416195122)*alphaLH(LH2,8) - (0.0242507310685106)*alphaLH(LH2,9) - (0.0798190889866963)*alphaLH(LH2,10) - (8.04568855983234E-12)*alphaLH(LH3,1) - (2.59809205260808E-10)*alphaLH(LH3,2) + (3.52800633152128E-11)*alphaLH(LH3,3) + (1.21130483421439E-11)*alphaLH(LH3,4) + (7.16723924654161E-11)*alphaLH(LH3,5) - (9.884821849937E-12)*alphaLH(LH3,6) + (5.91483484413402E-11)*alphaLH(LH3,7) + (8.45970937746188E-11)*alphaLH(LH3,8) - (2.38848940625758E-13)*alphaLH(LH3,9) - (1.00980450667976E-10)*alphaLH(LH3,10) + (53.0303053647703)*pi(UH1,LH1) + (1193.05341572595)*pi(UH1,LH2) + (1193.05341578004)*pi(UH1,LH3) + (3749.50044468276)*pi(UH2,LH1) + (1191.77390353288)*pi(UH2,LH2) + (1191.77390358541)*pi(UH2,LH3) + (743.021152606726)*pi(UH3,LH1) + (0)*pi(UH3,LH2) + (0)*pi(UH3,LH3) =L= 35 ; (LHS = 249.519304176666, INFES = 214.519304176666 ****)
+     
+
+---- obj1  =E=  
+
+obj1..  (0)*miuLH(LH2,1) + (0)*miuLH(LH2,2) + (0)*miuLH(LH2,3) + (0)*miuLH(LH2,4) + (0)*miuLH(LH2,5) + (0)*miuLH(LH2,6) + (0)*miuLH(LH2,7) + (0)*miuLH(LH2,8) + (0)*miuLH(LH2,9) + (0)*miuLH(LH2,10) + (0)*alphaLH(LH2,1) + (0)*alphaLH(LH2,2) + (0)*alphaLH(LH2,3) - (1.11022302462516E-16)*alphaLH(LH2,4) + (0)*alphaLH(LH2,5) - (1.11022302462516E-16)*alphaLH(LH2,6) + (0)*alphaLH(LH2,7) + (0)*alphaLH(LH2,8) + (0)*alphaLH(LH2,9) - (1.11022302462516E-16)*alphaLH(LH2,10) + z =E= 125.841061 ; (LHS = 868.862213606726, INFES = 743.021152606726 ****)
+     
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 46
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE mymodel Using NLP From line 205
+
+
+---- miuLH  
+
+miuLH(LH1,1)
+                (.LO, .L, .UP, .M = -10000, 1.13295845011248, 10000, 0)
+       (0.3401) distanceC
+
+miuLH(LH1,2)
+                (.LO, .L, .UP, .M = -10000, 1.84197513591538, 10000, 0)
+       (0.8974) distanceC
+
+miuLH(LH1,3)
+                (.LO, .L, .UP, .M = -10000, 3.03434364646209, 10000, 0)
+       (1.3444) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- alphaLH  
+
+alphaLH(LH1,1)
+                (.LO, .L, .UP, .M = 0, 2.41597698335885, 10000, 0)
+      (-0.0302) distanceC
+
+alphaLH(LH1,2)
+                (.LO, .L, .UP, .M = 0, 2.470836415459, 10000, 0)
+      (-0.0773) distanceC
+
+alphaLH(LH1,3)
+                (.LO, .L, .UP, .M = 0, 3.45617597559503, 10000, 0)
+       (0.0134) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- pi  
+
+pi(UH1,LH1)
+                (.LO, .L, .UP, .M = 0, 0.66, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH1)
+      (53.0303) distanceC
+
+pi(UH1,LH2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 13041.5759302919)
+        1       ec1(UH1)
+        1       ec2(LH2)
+    (1193.0534) distanceC
+
+pi(UH1,LH3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       ec1(UH1)
+        1       ec2(LH3)
+    (1193.0534) distanceC
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 743.021152606726, +INF, 0)
+        1       obj1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 47
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE mymodel Using NLP From line 205
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.600E-01, 1.258E+02]
+Bound     [min, max] : [ 1.000E+00, 1.000E+04] - Zero values observed as well
+Matrix    [min, max] : [ 1.110E-16, 3.750E+03] - Zero values observed as well
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 48
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mymodel Using NLP From line 205
+
+
+LOOPS                           *            UH3
+                                *            LH2
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES           70
+NON ZERO ELEMENTS           108     NON LINEAR N-Z             89
+CODE LENGTH                 932     CONSTANT POOL              79
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  47.6.0 c2de9d6d WEX-WEI
+               L O O P S         *          UH3
+                                 *          LH2
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 49
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mymodel Using NLP From line 205
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mymodel             OBJECTIVE  z
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  BARON               FROM LINE  205
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                0.0000
+
+ RESOURCE USAGE, LIMIT          0.510        30.000
+ ITERATION COUNT, LIMIT         0    2147483647
+ EVALUATION ERRORS              0             0
+
+GAMS/BARON       47.6.0 c2de9d6d Sep 12, 2024          WEI x86 64bit/MS Window
+
+BARON is a product of The Optimization Firm, LLC. http://www.minlp.com/
+Parts of the BARON software were created at the
+University of Illinois at Urbana-Champaign.
+
+
+===========================================================================
+ BARON version 24.5.8. Built: WIN-64 Wed May 8 10:05:37 EDT 2024 
+ Running on machine ZHONGYU_CAMPUS
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC, ILOG CPLEX                             
+
+Solution      = 0  found at node 1
+Best possible = 0
+Absolute gap  = 0  optca = 0.1
+Relative gap  = 0  optcr = 0.01
+
+
+---- EQU ec1  
+
+           LOWER          LEVEL          UPPER
+
+UH1         0.6600         0.6600         0.6600      
+UH2         0.1800         0.1800         0.1800      
+UH3         0.1600         0.1600         0.1600      
+
+---- EQU ec2  
+
+           LOWER          LEVEL          UPPER
+
+LH1         0.6600         0.6600         0.6600      
+LH2         0.1800         0.1800         0.1800      
+LH3         0.1600         0.1600         0.1600      
+
+                           LOWER          LEVEL          UPPER
+
+---- EQU distanceC         -INF           34.4080        35.0000      
+---- EQU obj1             125.8411       125.8411       125.8411      
+
+---- VAR miuLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1     -10000.0000         0.8741     10000.0000      
+LH1.2     -10000.0000         1.1594     10000.0000      
+LH1.3     -10000.0000         2.0118     10000.0000      
+LH1.4     -10000.0000         2.5967     10000.0000      
+LH1.5     -10000.0000         4.0802     10000.0000      
+LH1.6     -10000.0000         4.2383     10000.0000      
+LH1.7     -10000.0000         6.3840     10000.0000      
+LH1.8     -10000.0000         6.1402     10000.0000      
+LH1.9     -10000.0000         6.9295     10000.0000      
+LH1.10    -10000.0000         6.7057     10000.0000      
+LH2.1     -10000.0000         2.0973     10000.0000      
+LH2.2     -10000.0000         4.3866     10000.0000      
+LH2.3     -10000.0000         6.8466     10000.0000      
+LH2.4     -10000.0000        11.1218     10000.0000      
+LH2.5     -10000.0000        12.0497     10000.0000      
+LH2.6     -10000.0000        14.4132     10000.0000      
+LH2.7     -10000.0000        17.2428     10000.0000      
+LH2.8     -10000.0000        18.0891     10000.0000      
+LH2.9     -10000.0000        23.2899     10000.0000      
+LH2.10    -10000.0000        26.2771     10000.0000      
+LH3.1     -10000.0000         4.7281     10000.0000      
+LH3.2     -10000.0000         8.3690     10000.0000      
+LH3.3     -10000.0000        12.0827     10000.0000      
+LH3.4     -10000.0000        17.5292     10000.0000      
+LH3.5     -10000.0000        20.7825     10000.0000      
+LH3.6     -10000.0000        25.2796     10000.0000      
+LH3.7     -10000.0000        29.4548     10000.0000      
+LH3.8     -10000.0000        33.1680     10000.0000      
+LH3.9     -10000.0000        38.9666     10000.0000      
+LH3.10    -10000.0000        42.4605     10000.0000      
+
+---- VAR alphaLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1           .             2.6420     10000.0000      
+LH1.2           .             3.0833     10000.0000      
+LH1.3           .             3.3169     10000.0000      
+LH1.4           .             6.4436     10000.0000      
+LH1.5           .            10.2335     10000.0000      
+LH1.6           .            12.1100     10000.0000      
+LH1.7           .            12.8990     10000.0000      
+LH1.8           .            19.1304     10000.0000      
+LH1.9           .            12.7537     10000.0000      
+LH1.10          .            16.1495     10000.0000      
+LH2.1           .             1.6599     10000.0000      
+LH2.2           .             0.7800     10000.0000      
+LH2.3           .             4.0033     10000.0000      
+LH2.4           .             6.7631     10000.0000      
+LH2.5           .            15.0985     10000.0000      
+LH2.6           .            13.2213     10000.0000      
+LH2.7           .            28.7773     10000.0000      
+LH2.8           .            32.0779     10000.0000      
+LH2.9           .            16.9004     10000.0000      
+LH2.10          .             6.5595     10000.0000      
+LH3.1           .             1.1422     10000.0000      
+LH3.2           .             5.4066     10000.0000      
+LH3.3           .             2.2004     10000.0000      
+LH3.4           .             5.5439     10000.0000      
+LH3.5           .             3.2109     10000.0000      
+LH3.6           .            17.2771     10000.0000      
+LH3.7           .            15.7419     10000.0000      
+LH3.8           .             4.6885     10000.0000      
+LH3.9           .            21.7612     10000.0000      
+LH3.10          .            13.6670     10000.0000      
+
+---- VAR pi  
+
+               LOWER          LEVEL          UPPER
+
+UH1.LH1          .             0.6568         1.0000      
+UH1.LH2          .             0.0031         1.0000      
+UH1.LH3          .             0.0001         1.0000      
+UH2.LH1          .             0.0002         1.0000      
+UH2.LH2          .             0.0208         1.0000      
+UH2.LH3          .             0.1591         1.0000      
+UH3.LH1          .             0.0031         1.0000      
+UH3.LH2          .             0.1561         1.0000      
+UH3.LH3          .             0.0008         1.0000      
+
+                           LOWER          LEVEL          UPPER
+
+---- VAR z                 -INF             .            +INF         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 50
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    212 Objective Value =
+            VARIABLE z.L                   =        0.000  
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 51
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE mymodel Using NLP From line 205
+
+
+---- ec1  =E=  
+
+ec1(UH1)..  pi(UH1,LH1) + pi(UH1,LH2) + pi(UH1,LH3) =E= 0.66 ; (LHS = 0.66)
+     
+ec1(UH2)..  pi(UH2,LH1) + pi(UH2,LH2) + pi(UH2,LH3) =E= 0.18 ; (LHS = 0.18)
+     
+ec1(UH3)..  pi(UH3,LH1) + pi(UH3,LH2) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- ec2  =E=  
+
+ec2(LH1)..  pi(UH1,LH1) + pi(UH2,LH1) + pi(UH3,LH1) =E= 0.66 ; (LHS = 0.66)
+     
+ec2(LH2)..  pi(UH1,LH2) + pi(UH2,LH2) + pi(UH3,LH2) =E= 0.18 ; (LHS = 0.18)
+     
+ec2(LH3)..  pi(UH1,LH3) + pi(UH2,LH3) + pi(UH3,LH3) =E= 0.16 ; (LHS = 0.16)
+     
+
+---- distanceC  =L=  
+
+distanceC..  - (0.0102737126906754)*miuLH(LH1,1) - (0.0256861050433196)*miuLH(LH1,2) - (0.0381302817570942)*miuLH(LH1,3) - (0.0658787445661993)*miuLH(LH1,4) - (0.0629019451532946)*miuLH(LH1,5) - (0.0801723265703538)*miuLH(LH1,6) - (0.0858563605564934)*miuLH(LH1,7) - (0.095262645333382)*miuLH(LH1,8) - (0.128048619129855)*miuLH(LH1,9) - (0.151946560502988)*miuLH(LH1,10) - (0.101727149633422)*miuLH(LH2,1) - (0.145492461629195)*miuLH(LH2,2) - (0.187644213878319)*miuLH(LH2,3) - (0.213507455400228)*miuLH(LH2,4) - (0.313532907659905)*miuLH(LH2,5) - (0.388543262447259)*miuLH(LH2,6) - (0.440213116970775)*miuLH(LH2,7) - (0.552572927079539)*miuLH(LH2,8) - (0.550159383324992)*miuLH(LH2,9) - (0.551377502821507)*miuLH(LH2,10) - (0.836356628503716)*miuLH(LH3,1) - (1.26562597864083)*miuLH(LH3,2) - (1.66390571193224)*miuLH(LH3,3) - (2.03535382399051)*miuLH(LH3,4) - (2.77508912959244)*miuLH(LH3,5) - (3.45304386857431)*miuLH(LH3,6) - (3.88079366109589)*miuLH(LH3,7) - (4.79230263913011)*miuLH(LH3,8) - (4.98114075483382)*miuLH(LH3,9) - (5.14136514088497)*miuLH(LH3,10) + (0.000704213193778357)*alphaLH(LH1,1) + (0.00149043091305755)*alphaLH(LH1,2) - (0.000270403388730835)*alphaLH(LH1,3) - (6.16441675074189E-5)*alphaLH(LH1,4) - (0.000589408032592083)*alphaLH(LH1,5) - (0.000167159925688348)*alphaLH(LH1,6) - (0.00153195460273001)*alphaLH(LH1,7) - (0.00082586474385357)*alphaLH(LH1,8) - (0.000511202760129565)*alphaLH(LH1,9) + (0.00112726014523839)*alphaLH(LH1,10) + (0.00273476878220266)*alphaLH(LH2,1) - (0.0369705512414475)*alphaLH(LH2,2) + (0.00565056770168632)*alphaLH(LH2,3) + (0.00203958535438209)*alphaLH(LH2,4) + (0.0117404834617838)*alphaLH(LH2,5) - (0.00284096780310715)*alphaLH(LH2,6) + (0.00643041012967385)*alphaLH(LH2,7) + (0.0135360930489304)*alphaLH(LH2,8) - (0.00239348994434442)*alphaLH(LH2,9) - (0.0109701184040616)*alphaLH(LH2,10) + (0.0270906162280412)*alphaLH(LH3,1) - (0.259836432830543)*alphaLH(LH3,2) + (0.0411536797681792)*alphaLH(LH3,3) + (0.015054205890594)*alphaLH(LH3,4) + (0.0857372074114806)*alphaLH(LH3,5) - (0.0227622479639125)*alphaLH(LH3,6) + (0.0414641103843829)*alphaLH(LH3,7) + (0.098285804044287)*alphaLH(LH3,8) - (0.0214134566011021)*alphaLH(LH3,9) - (0.0706130846832799)*alphaLH(LH3,10) + (0.000819802037739237)*pi(UH1,LH1) + (1193.05341572659)*pi(UH1,LH2) + (1193.05341572595)*pi(UH1,LH3) + (4688.24814590176)*pi(UH2,LH1) + (1191.77390353219)*pi(UH2,LH2) + (1191.77390353288)*pi(UH2,LH3) + (1195.0245759627)*pi(UH3,LH1) - (2.8421709430404E-14)*pi(UH3,LH2) + (0)*pi(UH3,LH3) =L= 35 ; (LHS = 222.568430058245, INFES = 187.568430058245 ****)
+     
+
+---- obj1  =E=  
+
+obj1..  (0)*miuLH(LH3,1) + (0)*miuLH(LH3,2) + (0)*miuLH(LH3,3) + (0)*miuLH(LH3,4) + (0)*miuLH(LH3,5) + (0)*miuLH(LH3,6) + (0)*miuLH(LH3,7) + (0)*miuLH(LH3,8) + (0)*miuLH(LH3,9) + (0)*miuLH(LH3,10) + (0)*alphaLH(LH3,1) + (0)*alphaLH(LH3,2) + (0)*alphaLH(LH3,3) - (1.11022302462516E-16)*alphaLH(LH3,4) + (0)*alphaLH(LH3,5) - (1.11022302462516E-16)*alphaLH(LH3,6) + (0)*alphaLH(LH3,7) + (0)*alphaLH(LH3,8) + (0)*alphaLH(LH3,9) - (1.11022302462516E-16)*alphaLH(LH3,10) + z =E= 125.841061 ; (LHS = 125.841061)
+     
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 52
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE mymodel Using NLP From line 205
+
+
+---- miuLH  
+
+miuLH(LH1,1)
+                (.LO, .L, .UP, .M = -10000, 0.874127264524162, 10000, NA)
+      (-0.0103) distanceC
+
+miuLH(LH1,2)
+                (.LO, .L, .UP, .M = -10000, 1.15937298082291, 10000, NA)
+      (-0.0257) distanceC
+
+miuLH(LH1,3)
+                (.LO, .L, .UP, .M = -10000, 2.01180463063015, 10000, NA)
+      (-0.0381) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- alphaLH  
+
+alphaLH(LH1,1)
+                (.LO, .L, .UP, .M = 0, 2.64204822645422, 10000, NA)
+       (0.0007) distanceC
+
+alphaLH(LH1,2)
+                (.LO, .L, .UP, .M = 0, 3.08326048049879, 10000, NA)
+       (0.0015) distanceC
+
+alphaLH(LH1,3)
+                (.LO, .L, .UP, .M = 0, 3.31685167753806, 10000, NA)
+      (-0.0003) distanceC
+
+REMAINING 27 ENTRIES SKIPPED
+
+---- pi  
+
+pi(UH1,LH1)
+                (.LO, .L, .UP, .M = 0, 0.656779156851584, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH1)
+       (0.0008) distanceC
+
+pi(UH1,LH2)
+                (.LO, .L, .UP, .M = 0, 0.00308837739407783, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH2)
+    (1193.0534) distanceC
+
+pi(UH1,LH3)
+                (.LO, .L, .UP, .M = 0, 0.000132465754337794, 1, NA)
+        1       ec1(UH1)
+        1       ec2(LH3)
+    (1193.0534) distanceC
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       obj1
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 53
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE mymodel Using NLP From line 205
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.600E-01, 1.258E+02]
+Bound     [min, max] : [ 1.000E+00, 1.000E+04] - Zero values observed as well
+Matrix    [min, max] : [ 1.110E-16, 4.688E+03] - Zero values observed as well
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 54
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mymodel Using NLP From line 205
+
+
+LOOPS                           *            UH3
+                                *            LH3
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES           70
+NON ZERO ELEMENTS           108     NON LINEAR N-Z             89
+CODE LENGTH                 932     CONSTANT POOL              79
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  47.6.0 c2de9d6d WEX-WEI
+               L O O P S         *          UH3
+                                 *          LH3
+
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 55
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mymodel Using NLP From line 205
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mymodel             OBJECTIVE  z
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  BARON               FROM LINE  205
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                0.0000
+
+ RESOURCE USAGE, LIMIT          0.550        30.000
+ ITERATION COUNT, LIMIT         0    2147483647
+ EVALUATION ERRORS              0             0
+
+GAMS/BARON       47.6.0 c2de9d6d Sep 12, 2024          WEI x86 64bit/MS Window
+
+BARON is a product of The Optimization Firm, LLC. http://www.minlp.com/
+Parts of the BARON software were created at the
+University of Illinois at Urbana-Champaign.
+
+
+===========================================================================
+ BARON version 24.5.8. Built: WIN-64 Wed May 8 10:05:37 EDT 2024 
+ Running on machine ZHONGYU_CAMPUS
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC, ILOG CPLEX                             
+
+Solution      = 0  found at node 1
+Best possible = 0
+Absolute gap  = 0  optca = 0.1
+Relative gap  = 0  optcr = 0.01
+
+
+---- EQU ec1  
+
+           LOWER          LEVEL          UPPER
+
+UH1         0.6600         0.6600         0.6600      
+UH2         0.1800         0.1800         0.1800      
+UH3         0.1600         0.1600         0.1600      
+
+---- EQU ec2  
+
+           LOWER          LEVEL          UPPER
+
+LH1         0.6600         0.6600         0.6600      
+LH2         0.1800         0.1800         0.1800      
+LH3         0.1600         0.1600         0.1600      
+
+                           LOWER          LEVEL          UPPER
+
+---- EQU distanceC         -INF           32.9578        35.0000      
+---- EQU obj1             125.8411       125.8411       125.8411      
+
+---- VAR miuLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1     -10000.0000         0.8842     10000.0000      
+LH1.2     -10000.0000         1.1832     10000.0000      
+LH1.3     -10000.0000         2.0469     10000.0000      
+LH1.4     -10000.0000         2.6559     10000.0000      
+LH1.5     -10000.0000         4.1381     10000.0000      
+LH1.6     -10000.0000         4.3120     10000.0000      
+LH1.7     -10000.0000         6.4634     10000.0000      
+LH1.8     -10000.0000         6.2289     10000.0000      
+LH1.9     -10000.0000         7.0463     10000.0000      
+LH1.10    -10000.0000         6.8431     10000.0000      
+LH2.1     -10000.0000         4.6640     10000.0000      
+LH2.2     -10000.0000         8.2712     10000.0000      
+LH2.3     -10000.0000        11.9539     10000.0000      
+LH2.4     -10000.0000        17.3704     10000.0000      
+LH2.5     -10000.0000        20.5670     10000.0000      
+LH2.6     -10000.0000        25.0115     10000.0000      
+LH2.7     -10000.0000        29.1540     10000.0000      
+LH2.8     -10000.0000        32.7976     10000.0000      
+LH2.9     -10000.0000        38.5789     10000.0000      
+LH2.10    -10000.0000        42.0592     10000.0000      
+LH3.1     -10000.0000         2.0973     10000.0000      
+LH3.2     -10000.0000         4.3866     10000.0000      
+LH3.3     -10000.0000         6.8466     10000.0000      
+LH3.4     -10000.0000        11.1218     10000.0000      
+LH3.5     -10000.0000        12.0497     10000.0000      
+LH3.6     -10000.0000        14.4132     10000.0000      
+LH3.7     -10000.0000        17.2428     10000.0000      
+LH3.8     -10000.0000        18.0891     10000.0000      
+LH3.9     -10000.0000        23.2899     10000.0000      
+LH3.10    -10000.0000        26.2771     10000.0000      
+
+---- VAR alphaLH  
+
+              LOWER          LEVEL          UPPER
+
+LH1.1           .             6.1312     10000.0000      
+LH1.2           .             6.7211     10000.0000      
+LH1.3           .             6.9027     10000.0000      
+LH1.4           .            10.3771     10000.0000      
+LH1.5           .            14.3445     10000.0000      
+LH1.6           .            16.5306     10000.0000      
+LH1.7           .            17.3625     10000.0000      
+LH1.8           .            23.6063     10000.0000      
+LH1.9           .            17.2546     10000.0000      
+LH1.10          .            20.6265     10000.0000      
+LH2.1           .            15.2290     10000.0000      
+LH2.2           .            21.3682     10000.0000      
+LH2.3           .            17.3619     10000.0000      
+LH2.4           .            22.6518     10000.0000      
+LH2.5           .            20.1620     10000.0000      
+LH2.6           .            36.6120     10000.0000      
+LH2.7           .            35.8605     10000.0000      
+LH2.8           .            23.4041     10000.0000      
+LH2.9           .            41.3591     10000.0000      
+LH2.10          .            33.0055     10000.0000      
+LH3.1           .             1.6599     10000.0000      
+LH3.2           .             0.7800     10000.0000      
+LH3.3           .             4.0033     10000.0000      
+LH3.4           .             6.7631     10000.0000      
+LH3.5           .            15.0985     10000.0000      
+LH3.6           .            13.2213     10000.0000      
+LH3.7           .            28.7773     10000.0000      
+LH3.8           .            32.0779     10000.0000      
+LH3.9           .            16.9004     10000.0000      
+LH3.10          .             6.5595     10000.0000      
+
+---- VAR pi  
+
+               LOWER          LEVEL          UPPER
+
+UH1.LH1          .             0.6563         1.0000      
+UH1.LH2          .             0.0001         1.0000      
+UH1.LH3          .             0.0036         1.0000      
+UH2.LH1          .             0.0005         1.0000      
+UH2.LH2          .             0.1757         1.0000      
+UH2.LH3          .             0.0038         1.0000      
+UH3.LH1          .             0.0031         1.0000      
+UH3.LH2          .             0.0042         1.0000      
+UH3.LH3          .             0.1526         1.0000      
+
+                           LOWER          LEVEL          UPPER
+
+---- VAR z                 -INF             .            +INF         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 47.6.0  c2de9d6d Sep 12, 2024          WEX-WEI x86 64bit/MS Windows - 09/28/24 04:44:29 Page 56
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    212 Objective Value =
+            VARIABLE z.L                   =        0.000  
+
+----    216 Final results for saving =
+
+----    216 PARAMETER z_results  Objective function value
+
+            LH1         LH2         LH3
+
+UH1                 869.816     390.079
+UH2    3740.550
+UH3     743.021
+
+
+----    226 Results saved to results.txt
+
+**** REPORT FILE SUMMARY
+
+resultsFile E:\proj\GMM_DRO\multipleData\resultsMIN_35.txt
+
+
+EXECUTION TIME       =      165.985 SECONDS      4 MB  47.6.0 c2de9d6d WEX-WEI
+
+
+USER: MUD- 5 User License                            G240208|0002AO-WIN
+      University of Alberta, Chemical and Materials EngineeriDC16827-S1
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      E:\proj\GMM_DRO\multipleData\LULinearPortfolioShortLoopMin_35.gms
+Output     E:\proj\GMM_DRO\multipleData\LULinearPortfolioShortLoopMin_35.lst

@@ -1,0 +1,9 @@
+z_results(UH1         ,LH1         ) =        53.03
+z_results(UH1         ,LH2         ) =      6787.55
+z_results(UH1         ,LH3         ) =      6042.52
+z_results(UH2         ,LH1         ) =      5734.19
+z_results(UH2         ,LH2         ) =      1556.01
+z_results(UH2         ,LH3         ) =      2431.70
+z_results(UH3         ,LH1         ) =      1749.15
+z_results(UH3         ,LH2         ) =      2348.99
+z_results(UH3         ,LH3         ) =      1919.62

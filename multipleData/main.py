@@ -5,8 +5,8 @@ import subprocess
 import concurrent.futures
 import pickle
 
-#mat = scipy.io.loadmat('samples_50.mat')
-mat = scipy.io.loadmat('samples_500.mat')
+mat = scipy.io.loadmat('samples_50.mat')
+#mat = scipy.io.loadmat('samples_500.mat')
 print(len(mat['xi']))
 
 def run_gams(gams_file):
@@ -18,7 +18,7 @@ def run_gams(gams_file):
 resultOBJ={}
 
 #for sampleOrder in range(0,len(mat['xi'])):
-for sampleOrder in range(0,30):
+for sampleOrder in range(0,50):
     resultOBJ[sampleOrder]={}
     sample=np.hstack(mat['xi'][sampleOrder])
     gm = GaussianMixture(n_components=3, covariance_type="diag", random_state=0).fit(sample)
@@ -176,9 +176,9 @@ for sampleOrder in range(0,30):
 
 print(resultOBJ)
 
-# with open('resultOBJ50.pkl', 'wb') as f:
-#     pickle.dump(resultOBJ, f)
-
-with open('resultOBJ500.pkl', 'wb') as f:
+with open('resultOBJ50.pkl', 'wb') as f:
     pickle.dump(resultOBJ, f)
+
+# with open('resultOBJ500.pkl', 'wb') as f:
+#     pickle.dump(resultOBJ, f)
 
